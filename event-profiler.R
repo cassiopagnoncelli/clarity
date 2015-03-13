@@ -34,6 +34,7 @@ runEventProfiler <- function(past_framesize=20) {   # AMEND: reverse pre-entry
     length(quotes) <- past_framesize
     as.double(quotes)
   })
+  pre_entry <- pre_entry[nrow(pre_entry):1,]
   
   # Combine pre- and post-entry.
   pre_post_entry <- rbind(pre_entry, post_entry)
@@ -76,7 +77,7 @@ runEventProfiler <- function(past_framesize=20) {   # AMEND: reverse pre-entry
   lines(timeframe, entry_summary$q75, t='l', col='deepskyblue', lwd=0.5)
   lines(timeframe, entry_summary$q25, t='l', col='deepskyblue', lwd=0.5)
   lines(timeframe, entry_summary$q10, t='l', col='deepskyblue', lwd=0.5)
-  lines(1:length(qty_histogram), qty_histogram, t='h', col='salmon')
+  lines(0:(length(qty_histogram)-1), qty_histogram, t='h', col='salmon')
   abline(v=0, lwd=2, col='gray')
   abline(h=1, lwd=2, col='darkgray', lty='dashed')
 }
