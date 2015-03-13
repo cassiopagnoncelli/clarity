@@ -82,6 +82,12 @@ source('orders-positions.R', local=.GlobalEnv)
 runExpertAdvisor <- function(etl, vectorized, begin, tick, end, settings) {
   initializeBackend(settings)
   etl()
-  print(loopEA(vectorized, begin, tick, end))
-  journal
+  
+  end_message <- loopEA(vectorized, begin, tick, end)
+  if (!is.null(end_message)) {
+    cat('Expert end message:\n')
+    print(end_message)
+  }
+  
+  ifelse(settings$journaling, journal, TRUE)
 }

@@ -88,9 +88,9 @@ downloadSymbols <- function() {
   ), ncol=3, byrow=T)
   
   for (i in 1:nrow(symbols)) {
-    cat(paste('Trying to download', symbols[i,1], '...'))
+    cat(paste('Trying to download', symbols[i,1], '...\n'))
     getSymbols(symbols[i,1], from=as.Date('1970-01-01'), env=.GlobalEnv)
-    cat('OK')
+    cat('OK\n')
     flush.console()
     
     cat('Saving to database... ')
@@ -98,7 +98,7 @@ downloadSymbols <- function() {
       cat('OK')
     else
       cat('Failed')
-    flush.console()
+    print('')
   }
   
   # Macroeconomics

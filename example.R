@@ -30,15 +30,11 @@ begin <- function() {
 }
 
 tick <- function() {
-  if (runif(1) < 0.025) {
-    print(paste('closing at epoch', epoch))
+  if (runif(1) < 0.025)
     closePosition()
-  }
   
-  if (runif(1) < 0.02) {
-    print(paste('buying at epoch', epoch))
+  if (runif(1) < 0.02)
     buy()
-  }
 }
 
 end <- function() {
@@ -49,7 +45,7 @@ end <- function() {
 # Simulation.
 #
 runExpertAdvisor(etl, vectorized, begin, tick, end,
-                       list(deposit=10000, journaling=TRUE))
+                       list(deposit=10000, journaling=FALSE))
 
 runEventProfiler()
 

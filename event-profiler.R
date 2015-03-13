@@ -57,6 +57,11 @@ runEventProfiler <- function(past_framesize=20) {   # AMEND: reverse pre-entry
                   1 + (entry_summary$mean-1) * 1.1)
   ylim_inf <- min(mean(entry_summary$lower[!is.na(entry_summary$lower)]),
                   1 + (entry_summary$mean-1) * 0.9)
+  qty_histogram <- rescaleSequence(
+    apply(post_entry[1:nrow(post_entry),], 1, function(x) { sum(!is.na(x)) }),
+    ylim_inf,
+    1
+  )
   
   readline('Press any key to go to the next plot')
   timeframe <- -past_framesize:(framesize-1)
@@ -71,6 +76,8 @@ runEventProfiler <- function(past_framesize=20) {   # AMEND: reverse pre-entry
   lines(timeframe, entry_summary$q75, t='l', col='deepskyblue', lwd=0.5)
   lines(timeframe, entry_summary$q25, t='l', col='deepskyblue', lwd=0.5)
   lines(timeframe, entry_summary$q10, t='l', col='deepskyblue', lwd=0.5)
+  lines(1:length(qty_histogram), qty_histogram, t='h', col='salmon')
   abline(v=0, lwd=2, col='gray')
   abline(h=1, lwd=2, col='darkgray', lty='dashed')
+  qty_histogram
 }

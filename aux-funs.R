@@ -45,3 +45,7 @@ ratiosSharpeSortino <- function(returns) {
   list(sharpe=ifelse(!is.na(sd.ret) && sd.ret > 0, avg.ret/sd.ret, NA),
        sortino=ifelse(!is.na(sd.loss) && sd.loss > 0, avg.ret/sd.loss, NA))
 }
+
+rescaleSequence <- function(s, bottom=0, top=1) {
+  bottom + (top - bottom) * (s - min(s)) / (max(s) - min(s))
+}
