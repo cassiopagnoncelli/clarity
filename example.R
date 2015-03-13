@@ -9,10 +9,14 @@ source('symbols.R', local=.GlobalEnv)
 # Expert advisor.
 #
 etl <- function() {
-  instr <- 'weg'
-  assign(instr, loadSymbol(instr), envir=.GlobalEnv)
-  addInstrument('weg', 4)
-  setDefaultInstrument(instr)
+  #instr <- 'weg'
+  #assign(instr, loadSymbol(instr), envir=.GlobalEnv)
+  #addInstrument('weg', 4)
+  #setDefaultInstrument(instr)
+  
+  assign('blabla', data.frame(d=cumprod(rep(1.01, 2000))), envir=.GlobalEnv)
+  addInstrument('blabla', 1)
+  setDefaultInstrument('blabla', set_ohlc=F)
 }
 
 vectorized <- function() {
@@ -49,5 +53,5 @@ runExpertAdvisor(etl, vectorized, begin, tick, end,
 
 runEventProfiler()
 
-#report <- generateReport()
-#report
+report <- generateReport()
+report

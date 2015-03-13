@@ -16,12 +16,13 @@ generateReport <- function(plot_results = T) {
   }))
   
   profit <- closing_prices - opening_prices
-  trades <- data.frame(profit = profit,
-                       size = orders_history$amount,
-                       gross_profit = orders_history$amount * profit,
-                       hold_time = with(orders_history, { close_time - open_time }),
-                       returns = closing_prices / opening_prices - 1,
-                       logreturns = log(closing_prices / opening_prices))
+  trades <- data.frame(
+    profit = profit,
+    size = orders_history$amount,
+    gross_profit = orders_history$amount * profit,
+    hold_time = with(orders_history, { close_time - open_time }),
+    returns = closing_prices / opening_prices - 1,
+    logreturns = log(closing_prices / opening_prices))
   
   # Returns summary.
   winning_trades <- trades['profit' > 0,]
@@ -91,8 +92,13 @@ generateReport <- function(plot_results = T) {
   
   # Plots.
   if (plot_results) {
-    # Equity curve.
     readline('Press any key to go to the next plot')
+    
+    split.screen(figs=c(2, 1))
+    split.screen(figs=c(1, 2), screen=2)
+    
+    # Equity curve.
+    screen(1)
     plot(equity_curve, t='l', lwd='2', col='blue', ylim=c(0, max(equity_curve)),
          xlab='Trades', ylab='Equity', main='Equity growth')
     lines(first(equity_curve) * cumprod(c(1, rep(
@@ -102,17 +108,25 @@ generateReport <- function(plot_results = T) {
     abline(h=first(equity_curve), lwd=0.7, col='lightblue')
     
     # Returns.
-    readline('Press any key to go to the next plot')
-    hist(trades$logreturns, freq=T, col='olivedrab1',
+    screen(3)
+    breaks <- 2 * 3.3 * log(length(trades$logreturns))
+    colors <- unlist(Map(function(x) { ifelse(x >= 0, 'olivedrab1', 'red') }, 
+                         hist(trades$logreturns, plot=F, breaks=breaks)$breaks))
+    hist(trades$logreturns, freq=T, breaks=breaks, col=colors,
          main='Log-returns', ylab='Frequency', xlab='Log-returns')
+    abline(v=0, col='blue', lwd=3)
+    rug(jitter(trades$logreturns))
     
     # Wins vs losses.
-    readline('Press any key to go to the next plot')
-    boxplot(trades$gross_profit, horizontal=T,
+    screen(4)
+    boxplot(trades$logreturns, horizontal=T,
             main='Win vs Loss positions', xlab='Profit')
-    stripchart(trades$gross_profit, method='jitter', add=T,
+    stripchart(trades$logreturns, method='jitter', add=T,
                pch=16, at=.7, cex=.7, col='darkgray')
-    abline(v=0, col='gray')
+    abline(v=0, col='gray', lwd=1.5)
+    
+    # Finish plotting.
+    close.screen(all = T)
   }
   
   # Return.

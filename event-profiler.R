@@ -79,5 +79,4 @@ runEventProfiler <- function(past_framesize=20) {   # AMEND: reverse pre-entry
   lines(1:length(qty_histogram), qty_histogram, t='h', col='salmon')
   abline(v=0, lwd=2, col='gray')
   abline(h=1, lwd=2, col='darkgray', lty='dashed')
-  qty_histogram
 }
