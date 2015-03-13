@@ -92,7 +92,7 @@ generateReport <- function(plot_results = T) {
   
   # Plots.
   if (plot_results) {
-    readline('Press any key to go to the next plot')
+    readline('Press ENTER to go to the next plot ')
     
     split.screen(figs=c(2, 1))
     split.screen(figs=c(1, 2), screen=2)

@@ -9,14 +9,10 @@ source('symbols.R', local=.GlobalEnv)
 # Expert advisor.
 #
 etl <- function() {
-  #instr <- 'weg'
-  #assign(instr, loadSymbol(instr), envir=.GlobalEnv)
-  #addInstrument('weg', 4)
-  #setDefaultInstrument(instr)
-  
-  assign('blabla', data.frame(d=cumprod(rep(1.01, 2000))), envir=.GlobalEnv)
-  addInstrument('blabla', 1)
-  setDefaultInstrument('blabla', set_ohlc=F)
+  instr <- 'petrobras'
+  assign(instr, loadSymbol(instr), envir=.GlobalEnv)
+  addInstrument(instr, 6)
+  setDefaultInstrument(instr)
 }
 
 vectorized <- function() {
