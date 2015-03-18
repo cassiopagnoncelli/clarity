@@ -19,17 +19,19 @@ vectorized <- function() {
   time_index <- 100
   
   # Globally register only the series to be used.
-  eval({}, envir=.GlobalEnv)
+  eval({
+    
+  }, envir=.GlobalEnv)
   
   # Return the starting time index.
-  return(time_index)
+  ifelse(exists(as.character(substitute(time_index))), 1, time_index)
 }
 
-begin <- function() {
+beginEA <- function() {
   
 }
 
-tick <- function() {
+tickEA <- function() {
   if (runif(1) < 0.025)
     closePosition()
   
@@ -37,15 +39,15 @@ tick <- function() {
     buy()
 }
 
-end <- function() {
+endEA <- function() {
   
 }
 
 #
 # Simulation.
 #
-runExpertAdvisor(etl, vectorized, begin, tick, end,
-                       list(deposit=10000, journaling=FALSE))
+runExpertAdvisor(etl, vectorized, beginEA, tickEA, endEA,
+                 list(deposit=10000, journaling=F))
 
 runEventProfiler()
 

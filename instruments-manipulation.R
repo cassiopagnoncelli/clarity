@@ -32,7 +32,7 @@ instrumentSeries <- function(instrument_id='default', full_series=F) {
   if (sum(is.na(instrument_id)))
     return(NA)
   
-  if (length(instrument_id) == 1 && instrument_id == 'default')
+  if (length(instrument_id) == 1 & instrument_id == 'default')
     instrument_id <- default_instrument_id
   
   as.double(all_series[epoch, instruments[instrument_id, 'series_id']])

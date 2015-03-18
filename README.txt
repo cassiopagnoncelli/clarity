@@ -6,4 +6,10 @@ Limitations:
 - No commission nor spread
 - No slippage
 
-#library('data.table')
+To-do:
+- convert loaded series to quantmod's format
+- append position's return in open_positions
+- add kelly criteria in reporting result
+
+Explore:
+library('data.table')

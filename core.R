@@ -45,10 +45,10 @@ accountTickUpdate <- function() {
   }
 }
 
-loopEA <- function(vectorized, begin, tick, end) {
+loopEA <- function(vectorized, beginEA, tickEA, endEA) {
   starting_time <- vectorized()
   
-  begin()
+  beginEA()
   
   assign('epoch', starting_time, envir=.GlobalEnv)
   
@@ -56,8 +56,8 @@ loopEA <- function(vectorized, begin, tick, end) {
     journalWrite(paste('Starting simulation in epoch', epoch), level='info')
   
   n <- nrow(all_series)
-  while (epoch < n && !stopped) {
-    tick()
+  while (epoch < n & !stopped) {
+    tickEA()
     accountTickUpdate()
     assign('epoch', epoch + 1, envir=.GlobalEnv)
   }
@@ -67,7 +67,7 @@ loopEA <- function(vectorized, begin, tick, end) {
     accountTickUpdate()
   }
   
-  end()
+  endEA()
 }
 
 stopEA <- function() {
@@ -79,15 +79,11 @@ stopEA <- function() {
 source('orders-positions.R', local=.GlobalEnv)
 
 # Expert advisor.
-runExpertAdvisor <- function(etl, vectorized, begin, tick, end, settings) {
+runExpertAdvisor <- function(etl, vectorized, beginEA, tickEA, endEA,
+                             settings) {
   initializeBackend(settings)
   etl()
   
-  end_message <- loopEA(vectorized, begin, tick, end)
-  if (!is.null(end_message)) {
-    cat('Expert end message:\n')
-    print(end_message)
-  }
-  
-  ifelse(settings$journaling, journal, TRUE)
+  end_message <- loopEA(vectorized, beginEA, tickEA, endEA)
+  list(journal=journal, end=end_message)
 }

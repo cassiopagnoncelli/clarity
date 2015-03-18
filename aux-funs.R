@@ -25,7 +25,7 @@ sequenceAnalysis <- function(S) {
     ones <- c(ones, len)
   
   # Calculate the rank test p-value.
-  if (length(zeros) > 1 && length(ones) > 1) {
+  if (length(zeros) > 1 & length(ones) > 1) {
     maxv <- max(c(zeros, ones))
     pdf0 <- density(zeros, n=10, from=0, to=maxv)$y
     pdf1 <- density(ones, n=10, from=0, to=maxv)$y
@@ -42,8 +42,8 @@ ratiosSharpeSortino <- function(returns) {
   sd.ret <- sd(returns)
   sd.loss <- sd(returns[returns < 0])
   
-  list(sharpe=ifelse(!is.na(sd.ret) && sd.ret > 0, avg.ret/sd.ret, NA),
-       sortino=ifelse(!is.na(sd.loss) && sd.loss > 0, avg.ret/sd.loss, NA))
+  list(sharpe=ifelse(!is.na(sd.ret) & sd.ret > 0, avg.ret/sd.ret, NA),
+       sortino=ifelse(!is.na(sd.loss) & sd.loss > 0, avg.ret/sd.loss, NA))
 }
 
 rescaleSequence <- function(s, bottom=0, top=1) {
