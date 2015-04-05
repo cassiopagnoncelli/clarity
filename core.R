@@ -3,6 +3,8 @@ source('aux-funs.R', local=.GlobalEnv)    # No dependencies
 source('journal.R', local=.GlobalEnv)     # Depends global-vars
 source('instruments-manipulation.R', local=.GlobalEnv)
 
+library('compiler')
+
 # Tick loop.
 initializeBackend <- function(settings) {
   assign('stopped', FALSE, envir=.GlobalEnv)
@@ -55,9 +57,11 @@ loopEA <- function(vectorized, beginEA, tickEA, endEA) {
   if (journaling)
     journalWrite(paste('Starting simulation in epoch', epoch), level='info')
   
+  tickEAcompiled <- cmpfun(tickEA)
+  
   n <- nrow(all_series)
   while (epoch < n & !stopped) {
-    tickEA()
+    tickEAcompiled()
     accountTickUpdate()
     assign('epoch', epoch + 1, envir=.GlobalEnv)
   }

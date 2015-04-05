@@ -1,13 +1,4 @@
-source('core.R', local=.GlobalEnv)
-source('event-profiler.R', local=.GlobalEnv)
-source('reporting.R', local=.GlobalEnv)
-source('symbols.R', local=.GlobalEnv)
-
-options(error = recover)
-
-#
-# Expert advisor.
-#
+source('base.R', local=.GlobalEnv)
 library('zoo')
 
 etl <- function() {
@@ -32,22 +23,17 @@ vectorized <- function() {
   sd5 <- c(rep(0, 4), rollapply(all_series, 5, sd))
   upper <- ma5 + 2*sd5
   lower <- ma5 - 2*sd5
-  bollinger_ok <- all_series - lower > 0.2*(upper - lower)
+  bollinger_ok <- all_series - lower < 0.5*(upper - lower)
   
   # Globally register only the series to be used.
-  assign('buy_signal', signal_fast_crossover & fast_is_up & bollinger_ok,
+  assign('buy_signal', bollinger_ok & signal_fast_crossover,
          envir=.GlobalEnv)
   
-  time_index <- 85
-  
   # Return the starting time index.
-  #ifelse(exists(as.character(substitute(time_index))), time_index, 1)
-  time_index
+  85
 }
 
-beginEA <- function() {
-  
-}
+beginEA <- function() {}
 
 tickEA <- function() {
   if (runif(1) < 0.02)
@@ -57,9 +43,7 @@ tickEA <- function() {
     buy()
 }
 
-endEA <- function() {
-  
-}
+endEA <- function() {}
 
 #
 # Simulation.
