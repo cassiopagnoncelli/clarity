@@ -1,5 +1,4 @@
 source('base.R', local=.GlobalEnv)
-library('zoo')
 
 etl <- function() {
   instr <- 'petrobras'

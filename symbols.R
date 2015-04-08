@@ -1,8 +1,154 @@
 # Dependencies: # zypper install psqlODBC libiodbc-devel iodbc
 library('DBI')
 library('RPostgreSQL')
-library('quantmod')
 
+library('zoo')
+library('xts')
+library('TTR')
+library('quantmod')
+library('Quandl')
+
+# Quandl.
+Quandl.auth("VAUwWyRdTWiYLnedNhuy")
+
+quandl <- function(code) {
+  # Open connection.
+  pg_driver <- dbDriver('PostgreSQL')
+  pg_con <- dbConnect(pg_driver, dbname='quandl')
+  
+  # Check whether the series is already locally available.
+  series_exists <- dbExistsTable(pg_con, quandl2name(code))
+  
+  # Disconnect.
+  dbDisconnect(pg_con)
+  dbUnloadDriver(pg_driver)
+  
+  # Download and return series.
+  if (!series_exists)
+    quandlDownload(code)
+  
+  quandlLoad(code)
+}
+
+quandl2name <- function(code) {
+  tolower(sub('/', '_', code))
+}
+
+quandlDownload <- function(code) {
+  assign((instrument_name <- quandl2name(code)),
+         sort(Quandl(code, type='xts'), by='Date'),
+         envir=.GlobalEnv)
+  
+  quandlInsert(instrument_name)
+  
+  title_description <- system(paste("./data/quandl-get-meta.sh", code), intern=T)
+  quandlMetaInsert(code, title_description[1], title_description[2])
+  
+  instrument_name
+}
+
+quandlInsert <- function(df) {
+  if (is.character(df)) {
+    instrument_name <- quandl2name(df)
+    df <- get(df, envir=.GlobalEnv)
+  } else {
+    instrument_name <- tolower(as.character(substitute(df)))
+  }
+  
+  if ((n <- nrow(df)) <= 0 | ncol(df) < 1)
+    return(FALSE)
+  
+  # Open connection.
+  pg_driver <- dbDriver('PostgreSQL')
+  pg_con <- dbConnect(pg_driver, dbname='quandl')
+  
+  # Insert.
+  if (!dbExistsTable(pg_con, instrument_name))
+    result <- dbWriteTable(pg_con, instrument_name, as.data.frame(df))
+  else
+    result <- F
+  
+  # Disconnect.
+  dbDisconnect(pg_con)
+  dbUnloadDriver(pg_driver)
+  
+  result
+}
+
+quandlLoad <- function(instrument, limit=F) {
+  # Open connection.
+  pg_driver <- dbDriver('PostgreSQL')
+  pg_con <- dbConnect(pg_driver, dbname='quandl')
+  
+  # Fetch result.
+  instrument <- quandl2name(instrument)
+  
+  if (dbExistsTable(pg_con, instrument)) {
+    df <- dbReadTable(pg_con, instrument)
+    if (limit)
+      df <- df[1:limit,]
+    
+    #convert to xts object
+    
+    assign(instrument, df, envir=.GlobalEnv)
+  } else {
+    df <- F 
+  }
+  
+  # Disconnect.
+  dbDisconnect(pg_con)
+  dbUnloadDriver(pg_driver)
+  
+  # Return symbol.
+  if (is.data.frame(df))
+    return(instrument)
+  else
+    return(FALSE)
+}
+
+quandlMetaInsert <- function(quandl_code, title, description) {
+  # Open connection.
+  pg_driver <- dbDriver('PostgreSQL')
+  pg_con <- dbConnect(pg_driver, dbname='quandl')
+  
+  # Insert row.
+  row <- data.frame(quandl_code=quandl_code,
+                    name=quandl2name(quandl_code),
+                    title=title,
+                    description=description)
+  
+  result <- dbWriteTable(pg_con, 'meta', row, append=T)
+  
+  # Disconnect.
+  dbDisconnect(pg_con)
+  dbUnloadDriver(pg_driver)
+  
+  result
+}
+
+quandlMetaLoad <- function(name) {
+  if (!is.character(name))
+    name <- as.character(substitute(name))
+  
+  # Open connection.
+  pg_driver <- dbDriver('PostgreSQL')
+  pg_con <- dbConnect(pg_driver, dbname='quandl')
+  
+  # Insert row.
+  sql <- paste(
+    "SELECT * FROM meta WHERE name = '", quandl2name(name), "'", sep='')
+  
+  result <- dbGetQuery(pg_con, sql)[,-1]
+  
+  # Disconnect.
+  dbDisconnect(pg_con)
+  dbUnloadDriver(pg_driver)
+  
+  t(result)
+}
+whatis <- quandlMetaLoad
+
+# Instruments.
 insertSymbol <- function(instrument_name, df, rename.columns=F) {
   if ((n <- nrow(df)) <= 0 | ncol(df) < 4)
     return(FALSE)
@@ -47,6 +193,7 @@ loadSymbol <- function(instrument, limit=F) {
   df
 }
 
+# Quantmod.
 downloadSymbols <- function() {
   options("getSymbols.warning4.0"=FALSE)
   

@@ -9,7 +9,7 @@ Limitations:
 To-do:
 - convert loaded series to quantmod's format
 - append position's return in open_positions
-- add kelly criteria in reporting result
+- add kelly criteria in reporting result (multi-asset)
 
 Explore:
 library('data.table')
