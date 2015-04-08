@@ -41,7 +41,7 @@ quandlDownload <- function(code) {
   
   quandlInsert(instrument_name)
   
-  title_description <- system(paste("./data/quandl-get-meta.sh", code), intern=T)
+  title_description <- system(paste("./quandl/get-meta.sh", code), intern=T)
   quandlMetaInsert(code, title_description[1], title_description[2])
   
   instrument_name
