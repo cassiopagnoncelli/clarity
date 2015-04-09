@@ -1,7 +1,6 @@
 # Dependencies: # zypper install psqlODBC libiodbc-devel iodbc
 library('DBI')
 library('RPostgreSQL')
-
 library('zoo')
 library('xts')
 library('TTR')
@@ -11,23 +10,46 @@ library('Quandl')
 # Quandl.
 Quandl.auth("VAUwWyRdTWiYLnedNhuy")
 
-quandl <- function(code) {
+quandlList <- function(return_symbols = FALSE) {
+  system('./list-quandl.sh', intern=return_symbols)
+}
+
+quandl <- function(code, amalgamize = TRUE) {
   # Open connection.
   pg_driver <- dbDriver('PostgreSQL')
   pg_con <- dbConnect(pg_driver, dbname='quandl')
   
   # Check whether the series is already locally available.
-  series_exists <- dbExistsTable(pg_con, quandl2name(code))
+  series_exists <- rep(TRUE, length(code))
+  for (i in 1:length(code))
+    if (!dbExistsTable(pg_con, quandl2name(code[i])))
+      series_exists[i] <- FALSE
   
   # Disconnect.
   dbDisconnect(pg_con)
   dbUnloadDriver(pg_driver)
   
-  # Download and return series.
-  if (!series_exists)
-    quandlDownload(code)
+  # Download and load series.
+  for (i in 1:length(code))
+    if (!series_exists[i])
+      quandlDownload(code[i])
   
-  quandlLoad(code)
+  for (i in 1:length(code))
+    quandlLoad(code[i])
+  
+  # Return names
+  if (amalgamize) {
+    df <- get(first(code))
+    if (length(code) > 1)
+      for (i in 2:length(code))
+        df <- merge(df, get(code[i]), all = TRUE)
+    
+    assign('quandl', na.locf(df), envir=.GlobalEnv)
+    
+    return(df)
+  } else {
+    return(quandl2name(code))
+  }
 }
 
 quandl2name <- function(code) {
@@ -75,7 +97,7 @@ quandlInsert <- function(df) {
   result
 }
 
-quandlLoad <- function(instrument, limit=F) {
+quandlLoad <- function(instrument, type='xts', limit=F) {   # type == xts, data.frame
   # Open connection.
   pg_driver <- dbDriver('PostgreSQL')
   pg_con <- dbConnect(pg_driver, dbname='quandl')
@@ -88,7 +110,11 @@ quandlLoad <- function(instrument, limit=F) {
     if (limit)
       df <- df[1:limit,]
     
-    #convert to xts object
+    # Coerce type, if needed.
+    if (type == 'xts') {
+      df <- xts(df, order.by=as.POSIXct(row.names(df)))
+      colnames(df) <- instrument
+    }
     
     assign(instrument, df, envir=.GlobalEnv)
   } else {
@@ -127,7 +153,7 @@ quandlMetaInsert <- function(quandl_code, title, description) {
 }
 
 quandlMetaLoad <- function(name) {
-  if (!is.character(name))
+  if (!exists(as.character(substitute(name))))
     name <- as.character(substitute(name))
   
   # Open connection.
@@ -149,6 +175,10 @@ quandlMetaLoad <- function(name) {
 whatis <- quandlMetaLoad
 
 # Instruments.
+symbolsList <- function() {
+  system('./list-symbols.sh', intern=return_symbols)
+}
+
 insertSymbol <- function(instrument_name, df, rename.columns=F) {
   if ((n <- nrow(df)) <= 0 | ncol(df) < 4)
     return(FALSE)
@@ -174,16 +204,26 @@ insertSymbol <- function(instrument_name, df, rename.columns=F) {
   result
 }
 
-loadSymbol <- function(instrument, limit=F) {
+loadSymbol <- function(instrument, type='data.frame', limit=F) {
   # Open connection.
   pg_driver <- dbDriver('PostgreSQL')
   pg_con <- dbConnect(pg_driver, dbname='timeseries')
   
   # Fetch result.
-  df <- dbReadTable(pg_con, instrument)
-  if (limit)
-    df <- df[1:limit,]
-  #convert to xts object
+  if (!exists(as.character(substitute(instrument))))
+    instrument <- as.character(substitute(instrument))
+  
+  if (dbExistsTable(pg_con, instrument)) {
+    df <- dbReadTable(pg_con, instrument)
+    if (limit)
+      df <- df[1:limit,]
+    
+    if (type == 'xts') {
+      df <- xts(df, order.by=as.POSIXct(row.names(df)))
+    }
+  } else {
+    df <- FALSE
+  }
   
   # Disconnect.
   dbDisconnect(pg_con)
@@ -201,8 +241,8 @@ downloadSymbols <- function() {
   #american <- stockSymbols()
   #print(american)
   
+  # Bovespa
   symbols <- matrix(c(
-    #'FFTL4', 'Fostértil', 'fosfertil',
     'ABCB4.SA', 'ABC Banco', 'abc',
     'BVMF3.SA', 'BMF Bovespa', 'bmf',
     'PSSA3.SA', 'Porto Seguro', 'porto_seguro',
@@ -210,23 +250,19 @@ downloadSymbols <- function() {
     'CYRE3.SA', 'Cyrela', 'cyrela',
     'DTEX3.SA', 'Duratex', 'duratex',
     'MRVE3.SA', 'MRV Engenharia', 'mrv',
-    #'PDRG3.SA', 'PDG Reality', 'pdg',
     'GFSA3.SA', 'Gafisa', 'gafisa',
-    #'CFNB4', 'Confab', 'confab',
     'LUPA3.SA', 'Lupatech', 'lupatech',
     'PLAS3.SA', 'Plascar', 'plascar',
     'POMO4.SA', 'Marcopolo', 'marcopolo',
     'WEGE3.SA', 'Weg', 'weg',
-    #'ALLL11.SA','América Latina Logística', 'all',
-    'VALE',  'Vale do Rio Doce', 'vale',
-    #'MMX3',   'MMX', 'mmx',
+    'VALE',     'Vale do Rio Doce', 'vale',
     'OGXP3.SA', 'OGX Petróleo', 'ogx',
     'PETR4.SA', 'Petrobrás', 'petrobras',
     'DASA3.SA', 'DASA', 'dasa',
     'CSNA3.SA', 'Siderúrgia Nacional', 'csna',
     'GGBR4.SA', 'Gerdau', 'gerdau',
     'USIM5.SA', 'Usiminas', 'usiminas',
-    'TOTS3.SA',  'Totvs', 'totvs',
+    'TOTS3.SA', 'Totvs', 'totvs',
     'BTOW3.SA', 'B2W', 'b2w',
     'HYPE3.SA', 'Hypermarcas', 'hypermarcas',
     'LAME4.SA', 'Americanas', 'americanas',
@@ -248,27 +284,31 @@ downloadSymbols <- function() {
     print('')
   }
   
-  # Macroeconomics
+  # Macroeconomics.
+  # More indicators at
+  #http://en.wikipedia.org/wiki/Federal_Reserve_Economic_Data
+  #http://fossies.org/linux/gretl/share/bcih/fedstl.idx
   ticker.list <- c(
-    'AAA',
-    'ALTSALES',
-    'AMBNS',
-    'AMBSL',
-    'BAA',
-    'EMRATIO',
-    'FEDFUNDS',
-    'GASPRICE',
-    'GS1',
-    'GS10',
-    'GS20',
-    'LNS14100000',
-    'MORTG',
-    'NAPM',
-    'NPPTTL',
-    'OILPRICE',
-    'PAYEMS',
-    'TB3MS',
-    'UNRATE')
+    'AAA',          # Moody's Seasoned Aaa Corporate Bond Yield©
+    'ALTSALES',     # Light Weight Vehicle Sales: Autos & Light Trucks
+    'AMBNS',        # Adjusted Monetary Base
+    'AMBSL',        # St. Louis Adjusted Monetary Base
+    'BAA',          # Moody's Seasoned Baa Corporate Bond Yield
+    'EMRATIO',      # Civilian Employment-Population Ratio
+    'FEDFUNDS',     # Effective Federal Funds Rate, %
+    'GASPRICE',     # Natural Gas Price: Henry Hub, LA© (DISCONTINUED)
+    'GS1',          # 1-Year Treasury Constant Maturity Rate
+    'GS10',         # 10-Year Treasury Constant Maturity Rate
+    'GS20',         # 20-Year Treasury Constant Maturity Rate
+    'LNS14100000',  # Unemployment Rate - Full-Time Workers
+    'MORTG',        # 30-Year Conventional Mortgage Rate
+    'NAPM',         # ISM Manufacturing: PMI Composite Index
+    'NPPTTL',       # Total Nonfarm Private Payroll Employment
+    'OILPRICE',     # Spot Oil Price: West Texas Intermediate (DISCONTINUED SERIES)
+    'PAYEMS',       # All Employees: Total nonfarm
+    'TB3MS',        # 3-Month Treasury Bill: Secondary Market Rate
+    'UNRATE'        # Civilian Unemployment Rate
+  )
   
   #series <- getSymbols(ticker.list, src= 'FRED')
 }
