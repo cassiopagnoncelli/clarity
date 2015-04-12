@@ -1,9 +1,7 @@
-# Dependencies: # zypper install psqlODBC libiodbc-devel iodbc
 library('DBI')
-library('RPostgreSQL')
+library('RPostgreSQL')  # Dependencies: # zypper install psqlODBC libiodbc-devel iodbc
 library('zoo')
 library('xts')
-library('TTR')
 library('quantmod')
 library('Quandl')
 
@@ -32,10 +30,10 @@ quandl <- function(code, amalgamize = TRUE) {
   # Download and load series.
   for (i in 1:length(code))
     if (!series_exists[i])
-      quandlDownload(code[i])
+      .quandlDownload(code[i])
   
   for (i in 1:length(code))
-    quandlLoad(code[i])
+    .quandlLoad(code[i])
   
   # Return names
   if (amalgamize) {
@@ -56,20 +54,20 @@ quandl2name <- function(code) {
   tolower(sub('/', '_', code))
 }
 
-quandlDownload <- function(code) {
+.quandlDownload <- function(code) {
   assign((instrument_name <- quandl2name(code)),
          sort(Quandl(code, type='xts'), by='Date'),
          envir=.GlobalEnv)
   
-  quandlInsert(instrument_name)
+  .quandlInsert(instrument_name)
   
   title_description <- system(paste("./quandl/get-meta.sh", code), intern=T)
-  quandlMetaInsert(code, title_description[1], title_description[2])
+  .quandlMetaInsert(code, title_description[1], title_description[2])
   
   instrument_name
 }
 
-quandlInsert <- function(df) {
+.quandlInsert <- function(df) {
   if (is.character(df)) {
     instrument_name <- quandl2name(df)
     df <- get(df, envir=.GlobalEnv)
@@ -97,7 +95,7 @@ quandlInsert <- function(df) {
   result
 }
 
-quandlLoad <- function(instrument, type='xts', limit=F) {   # type == xts, data.frame
+.quandlLoad <- function(instrument, type='xts', limit=F) {   # type == xts, data.frame
   # Open connection.
   pg_driver <- dbDriver('PostgreSQL')
   pg_con <- dbConnect(pg_driver, dbname='quandl')
@@ -132,7 +130,7 @@ quandlLoad <- function(instrument, type='xts', limit=F) {   # type == xts, data.
     return(FALSE)
 }
 
-quandlMetaInsert <- function(quandl_code, title, description) {
+.quandlMetaInsert <- function(quandl_code, title, description) {
   # Open connection.
   pg_driver <- dbDriver('PostgreSQL')
   pg_con <- dbConnect(pg_driver, dbname='quandl')
@@ -152,7 +150,7 @@ quandlMetaInsert <- function(quandl_code, title, description) {
   result
 }
 
-quandlMetaLoad <- function(name) {
+.quandlMetaLoad <- function(name) {
   if (!exists(as.character(substitute(name))))
     name <- as.character(substitute(name))
   
@@ -172,10 +170,10 @@ quandlMetaLoad <- function(name) {
   
   t(result)
 }
-whatis <- quandlMetaLoad
+whatis <- .quandlMetaLoad
 
 # Instruments.
-symbolsList <- function() {
+symbolsList <- function(return_symbols = FALSE) {
   system('./list-symbols.sh', intern=return_symbols)
 }
 
@@ -210,9 +208,6 @@ loadSymbol <- function(instrument, type='data.frame', limit=F) {
   pg_con <- dbConnect(pg_driver, dbname='timeseries')
   
   # Fetch result.
-  if (!exists(as.character(substitute(instrument))))
-    instrument <- as.character(substitute(instrument))
-  
   if (dbExistsTable(pg_con, instrument)) {
     df <- dbReadTable(pg_con, instrument)
     if (limit)
