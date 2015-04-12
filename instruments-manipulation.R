@@ -28,14 +28,20 @@ setDefaultInstrument <- function(name, set_ohlc = TRUE) {
          envir=.GlobalEnv)
 }
 
+# Note: Do not pass instrument_id as a mix of integers and strings, eg. c(1, 'vale').
 instrumentSeries <- function(instrument_id='default', full_series=F) {
-  if (sum(is.na(instrument_id)))
-    return(NA)
+  if (length(instrument_id) > 1) {
+    if (is.character(instrument_id))
+      instrument_id[instrument_id == 'default'] <- default_instrument
+  } else
+    instrument_id <- ifelse(instrument_id == 'default', 
+                            default_instrument_id,
+                            instrument_id)
   
-  if (length(instrument_id) == 1 & instrument_id == 'default')    #### FIXME #############
-    instrument_id <- default_instrument_id
-  
-  as.double(all_series[epoch, instruments[instrument_id, 'series_id']])
+  if (full_series)
+    as.double(all_series[, instruments[instrument_id, 'series_id']])
+  else
+    as.double(all_series[epoch, instruments[instrument_id, 'series_id']])
 }
 
 ask <- function(instrument_id='default') {
