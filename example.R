@@ -19,13 +19,8 @@ vectorized <- function() {
   signal_fast_crossover <- ma5 > ma14 & ma5d < ma14d
   fast_is_up <- ma14 > ma80
   
-  sd5 <- c(rep(0, 4), rollapply(all_series, 5, sd))
-  upper <- ma5 + 2*sd5
-  lower <- ma5 - 2*sd5
-  bollinger_ok <- all_series - lower < 0.5*(upper - lower)
-  
   # Globally register only the series to be used.
-  assign('buy_signal', bollinger_ok & signal_fast_crossover,
+  assign('buy_signal', signal_fast_crossover & fast_is_up,
          envir=.GlobalEnv)
   
   # Return the starting time index.
@@ -35,8 +30,12 @@ vectorized <- function() {
 beginEA <- function() {}
 
 tickEA <- function() {
-  if (runif(1) < 0.02)
-    closePosition()
+  if (nrow(open_positions) > 0) {
+    if (positions_returns[1] < -0.2 || positions_returns[1] > 0.2) {
+      print(positionEvolution(1))
+      closePosition(1)
+    }
+  }
   
   if (buy_signal[epoch])
     buy()

@@ -1,3 +1,5 @@
+library('compiler')
+
 addInstrument <- function(name, series_id) {
   column_to_insert <- ifelse(is.null(ncol(all_series)), 1, ncol(all_series) + 1)
   
@@ -29,7 +31,7 @@ setDefaultInstrument <- function(name, set_ohlc = TRUE) {
 }
 
 # Note: Do not pass instrument_id as a mix of integers and strings, eg. c(1, 'vale').
-instrumentSeries <- function(instrument_id='default', full_series=F) {
+instrumentSeries <- cmpfun(function(instrument_id='default', full_series=F) {
   if (length(instrument_id) > 1) {
     if (is.character(instrument_id))
       instrument_id[instrument_id == 'default'] <- default_instrument
@@ -42,7 +44,7 @@ instrumentSeries <- function(instrument_id='default', full_series=F) {
     as.double(all_series[, instruments[instrument_id, 'series_id']])
   else
     as.double(all_series[epoch, instruments[instrument_id, 'series_id']])
-}
+})
 
 ask <- function(instrument_id='default') {
   instrumentSeries(instrument_id, F)

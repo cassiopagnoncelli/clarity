@@ -19,6 +19,8 @@ initializeBackend <- function(settings) {
          data.frame(instrument=c(), amount=c(), epoch=c()),
          envir=.GlobalEnv)
   
+  assign('positions_returns', NA, envir=.GlobalEnv)
+  
   assign('orders_history',
          data.frame(instrument_id=c(), amount=c(), open_time=c(), close_time=c()),
          envir=.GlobalEnv)
@@ -34,9 +36,19 @@ initializeBackend <- function(settings) {
   assign('journaling', settings$journaling, envir=.GlobalEnv)
 }
 
-accountTickUpdate <- function() {
-  floating <- ifelse(nrow(open_positions) > 0, 
-                     sum(instrumentSeries(open_positions$instrument_id) *
+accountTickUpdate <- cmpfun(function(update.returns = TRUE) {
+  if (update.returns) {
+    if (nrow(open_positions) > 0)
+      assign('positions_returns',
+             instrumentSeries(open_positions$instrument_id) / 
+               all_series[open_positions$epoch, open_positions$instrument_id] - 1,
+             envir=.GlobalEnv)
+    else
+      assign('positions_returns', NA, envir=.GlobalEnv)
+  }
+  
+  floating <- ifelse(nrow(open_positions) > 0,
+                     sum(instrumentSeries(open_positions$instrument_id) * 
                            open_positions$amount), 0)
   
   assign('equity', floating + balance, envir=.GlobalEnv)
@@ -45,7 +57,7 @@ accountTickUpdate <- function() {
     assign('equity_curve', c(equity_curve, equity), envir=.GlobalEnv)
     assign('had_deal', FALSE, envir=.GlobalEnv)
   }
-}
+})
 
 loopEA <- function(vectorized, beginEA, tickEA, endEA) {
   starting_time <- vectorized()
