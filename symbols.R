@@ -228,6 +228,45 @@ loadSymbol <- function(instrument, type='data.frame', limit=F) {
   df
 }
 
+loadSymbols <- function(instruments, type='xts') {
+  # Open connection.
+  pg_driver <- dbDriver('PostgreSQL')
+  pg_con <- dbConnect(pg_driver, dbname='timeseries')
+  
+  # Check instruments availability.
+  for (i in 1:length(instruments))
+    if (!dbExistsTable(pg_con, instruments[i])) {
+      dbDisconnect(pg_con)
+      dbUnloadDriver(pg_driver)
+      return(FALSE)
+    }
+  
+  # Fetch result.
+  for (i in 1:length(instruments)) {
+    df <- dbReadTable(pg_con, instruments[i])
+    assign(paste('a', i, sep=''), xts(df[,6], order.by=as.POSIXct(row.names(df))))
+  }
+  
+  # Merge and format
+  d <- a1
+  for (i in 2:length(instruments))
+    d <- merge(d, get(paste('a', i, sep='')), all=T)
+  colnames(d) <- instruments
+  
+  limits <- range(which(apply(is.na(d), 1, sum) == 0))
+  d <- na.locf(d[limits[1]:limits[2],])
+  
+  # Disconnect.
+  dbDisconnect(pg_con)
+  dbUnloadDriver(pg_driver)
+  
+  # Return symbols.
+  if (type == 'data.frame')
+    as.data.frame(d)
+  else
+    d
+}
+
 # Quantmod.
 downloadSymbols <- function() {
   options("getSymbols.warning4.0"=FALSE)

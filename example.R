@@ -31,10 +31,8 @@ beginEA <- function() {}
 
 tickEA <- function() {
   if (nrow(open_positions) > 0) {
-    if (positions_returns[1] < -0.2 || positions_returns[1] > 0.2) {
-      print(positionEvolution(1))
+    if (positions_returns[1] < -0.2 || positions_returns[1] > 0.2)
       closePosition(1)
-    }
   }
   
   if (buy_signal[epoch])
@@ -51,5 +49,5 @@ runExpertAdvisor(etl, vectorized, beginEA, tickEA, endEA,
 
 runEventProfiler()
 
-report <- generateReport()
+report <- generateReport(F)
 report

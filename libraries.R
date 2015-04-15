@@ -21,8 +21,11 @@ library('pso')
 library('quadprog')
 #library('Rsymphony')   # Mixed integer linear programming.
 
-## Linking.
+## Code performance.
 library('Rcpp')         # C++ interface.
+library('compiler')
+library('inline')
+library('parallel')
 
 ## General modeling.
 library('nnet')
@@ -38,6 +41,7 @@ library('depmixS4')
 library('assertthat')
 library('MASS')
 library('boot')
+library('outliers')
 library('longitudinal')    # Dynamic correlation
 library('copula')
 library('fCopulae')
