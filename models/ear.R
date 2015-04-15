@@ -145,6 +145,10 @@ fitted.ear <- function(fit) {
   fit$fitted
 }
 
+predict.ear <- function(fit, n.ahead = 5) {
+  
+}
+
 example.ear <- function() {
   v <- loadSymbols(c('petrobras', 'vale', 'marcopolo', 'lupatech', 'renner', 'rossi'))
   #ret <- diff(log(v))[-1,]

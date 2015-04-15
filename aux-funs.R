@@ -49,3 +49,14 @@ ratiosSharpeSortino <- function(returns) {
 rescaleSequence <- function(s, bottom=0, top=1) {
   bottom + (top - bottom) * (s - min(s)) / (max(s) - min(s))
 }
+
+kellyCriteria <- function(win_prob, avg_ret) {
+  p <- win_prob
+  b <- 1 + avg_ret
+  
+  (p * (b+1) - 1) / b
+}
+
+geomean <- function(x) {
+  prod(x)^(1/length(x))
+}

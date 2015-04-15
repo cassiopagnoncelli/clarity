@@ -32,7 +32,11 @@ library('nnet')
 library('wavelets')
 library('kernlab')
 library('KernSmooth')
+library('pomp')       # Particle filter, improved Kalman filter
+library('KFAS')       # fast Kalman filter
+library('FKF')        # Kalman filter
 library('dlm')
+library('dse')
 library('dynlm')
 library('e1071')
 library('depmixS4')
