@@ -3,7 +3,7 @@ Limitations:
 - Limit orders.
 - No OCO orders (FIFO system).
 - No stop loss / take profit.
-- No commission nor spread
+- Transaction costs, commission and spread
 - No slippage
 
 To-do:

@@ -23,7 +23,6 @@ generateReport <- function(plot_results = T) {
   
   winning_trades <- returns[returns > 0]
   losing_trades <- returns[returns <= 0]
-  ratios <- ratiosSharpeSortino(returns)
   
   win_loss_count   <- c(length(winning_trades), length(losing_trades))
   win_loss_avg     <- c(geomean(1+winning_trades) - 1, geomean(1+losing_trades) - 1)
@@ -33,8 +32,8 @@ generateReport <- function(plot_results = T) {
   
   expected_ret  <- prod(1 + returns)^(1/length(returns)) - 1
   profit_factor <- sum(winning_trades) / sum(losing_trades)
-  sharpe_ratio  <- ratios$sharpe
-  sortino_ratio <- ratios$sortino
+  sharpe_ratio  <- expected_ret / sd(returns)
+  sortino_ratio <- expected_ret / sd(losing_trades)
   
   kelly <- kellyCriteria(win_loss_avg[1], expected_ret)
   

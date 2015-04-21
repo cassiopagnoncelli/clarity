@@ -37,15 +37,6 @@ sequenceAnalysis <- function(S) {
   list(zeros=zeros, ones=ones, p.value=pv)
 }
 
-ratiosSharpeSortino <- function(returns) {
-  avg.ret <- mean(returns)
-  sd.ret <- sd(returns)
-  sd.loss <- sd(returns[returns < 0])
-  
-  list(sharpe=ifelse(!is.na(sd.ret) & sd.ret > 0, avg.ret/sd.ret, NA),
-       sortino=ifelse(!is.na(sd.loss) & sd.loss > 0, avg.ret/sd.loss, NA))
-}
-
 rescaleSequence <- function(s, bottom=0, top=1) {
   bottom + (top - bottom) * (s - min(s)) / (max(s) - min(s))
 }
@@ -59,4 +50,23 @@ kellyCriteria <- function(win_prob, avg_ret) {
 
 geomean <- function(x) {
   prod(x)^(1/length(x))
+}
+
+removeOutliers <- function(x, na.rm = TRUE, ...) {
+  qnt <- quantile(x, probs=c(.25, .75), na.rm = na.rm, ...)
+  H <- 1.5 * IQR(x, na.rm = na.rm)
+  y <- x
+  y[x < (qnt[1] - H)] <- NA
+  y[x > (qnt[2] + H)] <- NA
+  y
+}
+
+matricize <- function(x, lag=12) {
+  n <- length(x)
+  
+  m <- c()
+  for (i in 1:lag) 
+    m <- cbind(m, x[seq(i, n - lag + i)])
+  
+  m
 }

@@ -1,4 +1,6 @@
 ## Time series handling and modeling.
+library('zoo')
+library('xts')
 library('PerformanceAnalytics')
 library('fBasics')
 library('fAssets')
@@ -6,7 +8,7 @@ library('TSA')
 library('tseries')
 library('rugarch')
 library('ccgarch')
-library('dse')
+library('dse')           # Dynamic system estimation
 
 ## Technical analysis.
 library('TTR')
@@ -35,11 +37,12 @@ library('KernSmooth')
 library('pomp')       # Particle filter, improved Kalman filter
 library('KFAS')       # fast Kalman filter
 library('FKF')        # Kalman filter
-library('dlm')
-library('dse')
-library('dynlm')
-library('e1071')
-library('depmixS4')
+library('dse')        # Kalman
+library('dlm')        # Dynamic linear models
+library('dynlm')      # Dynamic linear models
+library('e1071')      # SVM
+library('depmixS4')   # HMM regime switching
+library('forecast')
 
 ## Utils.
 library('assertthat')
