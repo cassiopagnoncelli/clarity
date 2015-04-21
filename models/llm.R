@@ -1,9 +1,9 @@
 #
-# Exogenous Auto Regressive model with single output.
+# Lagged Linear Regression model.
 #
 library('quantmod')
 
-ear <- function(form, dataset, order=5, train=1, remove.outliers=FALSE) {
+llm <- function(form, dataset, order=5, train=1, remove.outliers=FALSE) {
   # Extract x and y from formula.
   df <- model.frame(form, dataset[rev(index(dataset)),])
   y <- model.response(df)
@@ -63,7 +63,7 @@ ear <- function(form, dataset, order=5, train=1, remove.outliers=FALSE) {
     aic=aic,
     bic=bic)
   
-  class(fit) <- 'ear'
+  class(fit) <- 'llm'
   
   fit
 }
@@ -77,7 +77,7 @@ removeOutliers <- function(x, na.rm = TRUE, ...) {
   y
 }
 
-plot.ear <- function(fit) {
+plot.llm <- function(fit) {
   readline('Press ENTER to next plot')
   ts.plot(as.vector(fit$Y), main='Actual vs fitted', ylab='Value',
           ylim=range(c(fit$Y, fit$fitted)))
@@ -116,7 +116,7 @@ plot.ear <- function(fit) {
   }
 }
 
-summary.ear <- function(fit, show.coefficients=FALSE) {
+summary.llm <- function(fit, show.coefficients=FALSE) {
   options(digits = 2)
   
   if (show.coefficients) {
@@ -141,21 +141,21 @@ summary.ear <- function(fit, show.coefficients=FALSE) {
   cat(paste('BIC: ', sprintf('%.2f', fit$bic), '\n', sep=''))
 }
 
-fitted.ear <- function(fit) {
+fitted.llm <- function(fit) {
   fit$fitted
 }
 
-predict.ear <- function(fit, n.ahead = 5) {
+predict.llm <- function(fit, n.ahead = 5) {
   
 }
 
-example.ear <- function() {
+example.llm <- function() {
   v <- loadSymbols(c('petrobras', 'vale', 'marcopolo', 'lupatech', 'renner', 'rossi'))
   #ret <- diff(log(v))[-1,]
   
-  fit <- ear(vale ~ marcopolo + lupatech + petrobras, v, 4, 0.6)
+  fit <- llm(vale ~ marcopolo + lupatech + petrobras, v, 4, 0.6)
   plot(fit)
   summary(fit)
 }
 
-example.ear()
+example.llm()
