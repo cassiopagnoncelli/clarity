@@ -31,7 +31,7 @@ generateReport <- function(plot_results = T) {
   win_loss_largest <- c(max(winning_trades), min(losing_trades))
   
   expected_ret  <- prod(1 + returns)^(1/length(returns)) - 1
-  profit_factor <- sum(winning_trades) / sum(losing_trades)
+  profit_factor <- sum(profit[profit > 0]) / -sum(profit[profit <= 0])
   sharpe_ratio  <- expected_ret / sd(returns)
   sortino_ratio <- expected_ret / sd(losing_trades)
   

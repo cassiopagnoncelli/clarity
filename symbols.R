@@ -5,7 +5,9 @@ library('xts')
 library('quantmod')
 library('Quandl')
 
+#
 # Quandl.
+#
 Quandl.auth("VAUwWyRdTWiYLnedNhuy")
 
 quandlList <- function(return_symbols = FALSE) {
@@ -172,7 +174,9 @@ quandl2name <- function(code) {
 }
 whatis <- .quandlMetaLoad
 
+#
 # Instruments.
+#
 symbolsList <- function(return_symbols = FALSE) {
   system('./list-symbols.sh', intern=return_symbols)
 }
@@ -269,12 +273,6 @@ loadSymbols <- function(instruments, type='xts') {
 
 # Quantmod.
 downloadSymbols <- function() {
-  options("getSymbols.warning4.0"=FALSE)
-  
-  # Get American stock symbols
-  #american <- stockSymbols()
-  #print(american)
-  
   # Bovespa
   symbols <- matrix(c(
     'ABCB4.SA', 'ABC Banco', 'abc',
@@ -301,7 +299,11 @@ downloadSymbols <- function() {
     'HYPE3.SA', 'Hypermarcas', 'hypermarcas',
     'LAME4.SA', 'Americanas', 'americanas',
     'LREN3.SA', 'Renner', 'renner',
-    'RENT3.SA', 'Localiza', 'localiza'
+    'RENT3.SA', 'Localiza', 'localiza',
+    'PDGR3.SA', 'PDG Realty', 'pdg',
+    'GFSA3.SA', 'Gafisa Realty', 'gafisa',
+    'TCSA3.SA', 'Tecnisa Realty', 'tecnisa',
+    'BISA3.SA', 'Brookfield Realty', 'brookfield'
   ), ncol=3, byrow=T)
   
   for (i in 1:nrow(symbols)) {
@@ -317,32 +319,138 @@ downloadSymbols <- function() {
       cat('Failed')
     print('')
   }
+}
+
+#
+# Indicators.
+#
+indicatorsList <- function(return_symbols = FALSE) {
+  system('./list-indicators.sh', intern=return_symbols)
+}
+
+indicatorInsert <- function(name, df, rename.columns=FALSE) {
+  if ((n <- nrow(df)) <= 0 | ncol(df) < 1)
+    return(FALSE)
+  
+  # Open connection.
+  pg_driver <- dbDriver('PostgreSQL')
+  pg_con <- dbConnect(pg_driver, dbname='indicators')
+  
+  # Rename columns.
+  if (rename.columns)
+    colnames(df) <- rename.columns
+  
+  # Insert.
+  if (!dbExistsTable(pg_con, name))
+    result <- dbWriteTable(pg_con, name, as.data.frame(df))
+  else
+    result <- F
+  
+  # Disconnect.
+  dbDisconnect(pg_con)
+  dbUnloadDriver(pg_driver)
+  
+  result
+}
+
+indicatorsLoad <- function(indicators, type='xts', trim=TRUE) {
+  # Open connection.
+  pg_driver <- dbDriver('PostgreSQL')
+  pg_con <- dbConnect(pg_driver, dbname='indicators')
+  
+  # Check indicators availability.
+  for (i in 1:length(indicators))
+    if (!dbExistsTable(pg_con, indicators[i])) {
+      dbDisconnect(pg_con)
+      dbUnloadDriver(pg_driver)
+      return(FALSE)
+    }
+  
+  # Fetch result.
+  for (i in 1:length(indicators)) {
+    df <- dbReadTable(pg_con, indicators[i])
+    assign(paste('a', i, sep=''), xts(df, order.by=as.POSIXct(row.names(df))))
+  }
+  
+  # Merge and format
+  d <- a1
+  if (length(indicators) > 1) {
+    for (i in 2:length(indicators))
+      d <- merge(d, get(paste('a', i, sep='')), all=T)
+  }
+  
+  colnames(d) <- indicators
+  
+  if (trim) {
+    limits <- range(which(apply(is.na(d), 1, sum) == 0))
+    d <- d[limits[1]:limits[2],]
+  }
+  
+  d <- na.locf(d)
+  
+  # Disconnect.
+  dbDisconnect(pg_con)
+  dbUnloadDriver(pg_driver)
+  
+  # Return symbols.
+  if (type == 'data.frame')
+    as.data.frame(d)
+  else
+    d
+}
+
+indicatorsDownload <- function() {
+  # Get American stock symbols
+  #american <- stockSymbols()
+  #print(american)
   
   # Macroeconomics.
   # More indicators at
   #http://en.wikipedia.org/wiki/Federal_Reserve_Economic_Data
   #http://fossies.org/linux/gretl/share/bcih/fedstl.idx
-  ticker.list <- c(
+  ticker_list <- c(
+    # Interest rates of different maturities and credit spreads
     'AAA',          # Moody's Seasoned Aaa Corporate Bond Yield©
-    'ALTSALES',     # Light Weight Vehicle Sales: Autos & Light Trucks
-    'AMBNS',        # Adjusted Monetary Base
-    'AMBSL',        # St. Louis Adjusted Monetary Base
     'BAA',          # Moody's Seasoned Baa Corporate Bond Yield
-    'EMRATIO',      # Civilian Employment-Population Ratio
-    'FEDFUNDS',     # Effective Federal Funds Rate, %
-    'GASPRICE',     # Natural Gas Price: Henry Hub, LA© (DISCONTINUED)
+    'MORTG',        # 30-Year Conventional Mortgage Rate
     'GS1',          # 1-Year Treasury Constant Maturity Rate
     'GS10',         # 10-Year Treasury Constant Maturity Rate
     'GS20',         # 20-Year Treasury Constant Maturity Rate
-    'LNS14100000',  # Unemployment Rate - Full-Time Workers
-    'MORTG',        # 30-Year Conventional Mortgage Rate
+    'DTB3',         # 3-Month Treasury Bill: Secondary Market Rate
+    'TB1YR',        # 1-Year Treasury Bill: Secondary Market Rate
+    # Business conditions
+    'INDPRO',       # Industrial Production Index
+    'BUSINV',       # Total Business Inventories
+    'ISRATIO',      # Total Business: Inventories to Sales Ratio
+    'PPIENG',       # Producer Price Index by Commodity Fuels & Related
+    #   Products & Power
+    'PPIACO',       # Producer Price Index for All Commodities
+    'TCU',          # Capacity Utilization: Total Industry
     'NAPM',         # ISM Manufacturing: PMI Composite Index
+    # Employment
+    'AWHI',         # Aggregate Weekly Hours: Production and Nonsupervisory Employees:
+    #   Total Private Industries
+    'UNRATE',       # Civilian Unemployment Rate
+    'EMRATIO',      # Civilian Employment-Population Ratio
+    'LNS14100000',  # Unemployment Rate - Full-Time Workers
+    # Others
+    'ALTSALES',     # Light Weight Vehicle Sales: Autos & Light Trucks
+    'AMBNS',        # Adjusted Monetary Base
+    'AMBSL',        # St. Louis Adjusted Monetary Base
+    'FEDFUNDS',     # Effective Federal Funds Rate, %
+    'GASPRICE',     # Natural Gas Price: Henry Hub, LA© (DISCONTINUED)
     'NPPTTL',       # Total Nonfarm Private Payroll Employment
     'OILPRICE',     # Spot Oil Price: West Texas Intermediate (DISCONTINUED SERIES)
     'PAYEMS',       # All Employees: Total nonfarm
-    'TB3MS',        # 3-Month Treasury Bill: Secondary Market Rate
-    'UNRATE'        # Civilian Unemployment Rate
+    'TB3MS'         # 3-Month Treasury Bill: Secondary Market Rate
   )
   
-  #series <- getSymbols(ticker.list, src= 'FRED')
+  for (i in 1:length(ticker_list)) {
+    getSymbols(ticker_list[i], src='FRED', from=as.Date('1850-01-01'), env=.GlobalEnv)
+    
+    if (indicatorInsert(ticker_list[i], get(ticker_list[i])))
+      cat('OK\n')
+    else
+      cat('Failed\n')
+  }
 }

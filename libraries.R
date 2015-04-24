@@ -1,3 +1,7 @@
+# Primarily finance
+library('quantmod')
+library('FinancialInstrument')
+
 ## Time series handling and modeling.
 library('zoo')
 library('xts')

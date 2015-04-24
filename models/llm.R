@@ -145,8 +145,7 @@ fitted.llm <- function(fit) {
   fit$fitted
 }
 
-predict.llm <- function(fit, n.ahead = 5) {
-  
+predict.llm <- function(fit, newdata) {
 }
 
 example.llm <- function() {

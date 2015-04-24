@@ -29,9 +29,11 @@ vectorized <- function() {
 
 beginEA <- function() {}
 
+# holding_time and positions_returns are available.
 tickEA <- function() {
   if (nrow(open_positions) > 0) {
-    if (positions_returns[1] < -0.2 || positions_returns[1] > 0.2)
+    if (positions_returns[1] < -0.2 || positions_returns[1] > 0.2 || 
+          sum(holding_time >= 38) > 0)
       closePosition(1)
   }
   

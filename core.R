@@ -21,6 +21,8 @@ initializeBackend <- function(settings) {
   
   assign('positions_returns', NA, envir=.GlobalEnv)
   
+  assign('holding_time', NA, envir=.GlobalEnv)
+  
   assign('orders_history',
          data.frame(instrument_id=c(), amount=c(), open_time=c(), close_time=c()),
          envir=.GlobalEnv)
@@ -38,13 +40,16 @@ initializeBackend <- function(settings) {
 
 accountTickUpdate <- cmpfun(function(update.returns = TRUE) {
   if (update.returns) {
-    if (nrow(open_positions) > 0)
+    if (nrow(open_positions) > 0) {
       assign('positions_returns',
              instrumentSeries(open_positions$instrument_id) / 
                all_series[open_positions$epoch, open_positions$instrument_id] - 1,
              envir=.GlobalEnv)
-    else
+      assign('holding_time', epoch - open_positions$epoch, envir=.GlobalEnv)
+    } else {
       assign('positions_returns', NA, envir=.GlobalEnv)
+      assign('holding_time', NA, envir=.GlobalEnv)
+    }
   }
   
   floating <- ifelse(nrow(open_positions) > 0,
