@@ -146,13 +146,15 @@ fitted.llm <- function(fit) {
 }
 
 predict.llm <- function(fit, newdata) {
+  d <- model.frame(fit$formula, dataset[rev(index(fit$newdata)),])
+  d %*% params
 }
 
 example.llm <- function() {
-  v <- loadSymbols(c('petrobras', 'vale', 'marcopolo', 'lupatech', 'renner', 'rossi'))
+  v <- loadSymbols(c('cyrela', 'gafisa', 'pdg', 'rossi', 'tecnisa', 'brookfield'))
   #ret <- diff(log(v))[-1,]
   
-  fit <- llm(vale ~ marcopolo + lupatech + petrobras, v, 4, 0.6)
+  fit <- llm(cyrela ~ gafisa + pdg + rossi + tecnisa + brookfield, v, 8, 0.2)
   plot(fit)
   summary(fit)
 }

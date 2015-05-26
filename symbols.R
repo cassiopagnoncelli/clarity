@@ -253,8 +253,10 @@ loadSymbols <- function(instruments, type='xts') {
   
   # Merge and format
   d <- a1
-  for (i in 2:length(instruments))
-    d <- merge(d, get(paste('a', i, sep='')), all=T)
+  if (length(instruments) > 1)
+    for (i in 2:length(instruments))
+      d <- merge(d, get(paste('a', i, sep='')), all=T)
+  
   colnames(d) <- instruments
   
   limits <- range(which(apply(is.na(d), 1, sum) == 0))
@@ -353,7 +355,7 @@ indicatorInsert <- function(name, df, rename.columns=FALSE) {
   result
 }
 
-indicatorsLoad <- function(indicators, type='xts', trim=TRUE) {
+indicatorsLoad <- function(indicators, trim=TRUE, type='xts') {
   # Open connection.
   pg_driver <- dbDriver('PostgreSQL')
   pg_con <- dbConnect(pg_driver, dbname='indicators')
