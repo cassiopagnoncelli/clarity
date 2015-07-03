@@ -53,7 +53,7 @@ Act according to the position evolution using the basic or more elaborate techni
 
 #### Arbitrage spot
 
-Comes with an extended triangular arbitrage module to latent arbitrage opportunities.
+Comes with an extended triangular arbitrage module to spot latent arbitrage opportunities.
 
 ![Arbitrage spot](./imgs/arbitrage_spot.png)
 
