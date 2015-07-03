@@ -46,8 +46,10 @@ Position sizing is an important part in scaling the trading strategy and there a
 
 #### Position management
 
-* S/L
-* T/P
+Act according to the position evolution using the basic or more elaborate techniques to cap risks.
+
+* Stop Loss
+* Take Profit
 * Trailing stop and dynamic trailing stop.
 
 #### Links to other technologies
@@ -67,6 +69,6 @@ Comes with an extended triangular arbitrage module to latent arbitrage opportuni
 
 #### Impact aggregator
 
-Analysing and tracking opposite events and events facing the same direction, all at different impact levels, play a pivotal role on strategy's success.
+Facing either same or opposite directions, an one-axis view over events at different impact levels plays in important role on strategy's success.
 
 ![Pulse continuous impact aggregator](./imgs/pulse_continuous_impact_aggregator.png)
