@@ -13,21 +13,24 @@ arbitrage to high frequency trading.
 
 As for the mechanics behind __Clarity__, it works alike
 
-* Akin to _Meta Trader_, with the standard `begin()`, `start()`, and `end()`.
+#### Akin to _Meta Trader_, with the standard `begin()`, `start()`, and `end()`.
 
 ![begin-tick-end loop](./imgs/begin_tick_end.png)
 
-* Handle multiple instruments, either equities or derivaties.
+#### ETL equities and derivatives
 
-* ETL indicators and instruments/indicators pre-load/pre-calculation.
+Indicators and instruments are available for pre-loading and pre-calculation.
+Simulations can involve multiple instruments, either equities or derivatives, as well as multiple indicators, either pre-calculated or calculated _on-the-fly_.
 
 ![Extract-Transform-Load](./imgs/etl.png)
 
-* _Event profiler_, for position evolution diagnose.
+#### Event profiler
+
+Track position evolution throughout the trades and diagnose what are their behaviour.
 
 ![Event profiler](./imgs/entry_positions.png)
 
-### Reporting and journaling.
+### Reporting and journaling
 
 ![Equity growth](./imgs/equity_growth.png)
 
@@ -35,25 +38,35 @@ As for the mechanics behind __Clarity__, it works alike
 
 ![Win vs Loss distribution](./imgs/win_vs_loss_positions.png)
 
-* Position sizing: Kelly criteria, Optimal/Secure/Fractional F, Dynamic PS using
+#### Position sizing
+
+Position sizing is an important part in scaling the trading strategy and there are optimal ways to calculate the right amount for each strategy. Widely known position sizing methods are Kelly criteria and Optimal/Fractional/Secure F.
 
 ![Positions and position sizing](./imgs/report.png)
 
-* Position management: S/L, T/P, trailing stop, dynamic trailing stop.
+#### Position management
 
-* Links to other technologies: _C_, _C++_. 
-Data providers: _Quandl_. 
-Databases: _Postgresql_, _MySQL_, _MariaDB_, etc. 
-Further links will include _S-plus_, _Matlab_, and _Mathematica_.
+* S/L
+* T/P
+* Trailing stop and dynamic trailing stop.
 
-* Parameter optimisation.
+#### Links to other technologies
 
-* Arbitrage spot: triangular arbitrage and extension.
+* Langauges: _C_, _C++_. 
+* Data providers: _Quandl_. 
+* Databases: _Postgresql_, _MySQL_, _MariaDB_, etc. 
+* Further links will include _S-plus_, _Matlab_, and _Mathematica_.
+
+#### Parameter optimisation
+
+#### Arbitrage spot
+
+Comes with an extended triangular arbitrage module to latent arbitrage opportunities.
 
 ![Arbitrage spot](./imgs/arbitrage_spot.png)
 
-* Hurst coefficient, special indicators, and special models.
+#### Impact aggregator
 
-* Pulse continuous impact aggregator for news trading.
+Analysing and tracking opposite events and events facing the same direction, all at different impact levels, play a pivotal role on strategy's success.
 
 ![Pulse continuous impact aggregator](./imgs/pulse_continuous_impact_aggregator.png)
