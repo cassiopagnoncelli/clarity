@@ -15,29 +15,29 @@ As for the mechanics behind __Clarity__, it works alike
 
 * Akin to _Meta Trader_, with the standard `begin()`, `start()`, and `end()`.
 
-[begin-tick-end loop](./imgs/begin_tick_end.png)
+![begin-tick-end loop](./imgs/begin_tick_end.png)
 
 * Handle multiple instruments, either equities or derivaties.
 
 * ETL indicators and instruments/indicators pre-load/pre-calculation.
 
-[]()
+![Extract-Transform-Load](./imgs/etl.png)
 
 * _Event profiler_, for position evolution diagnose.
 
-[Event profiler](./imgs/entry_positions.png)
+![Event profiler](./imgs/entry_positions.png)
 
 ### Reporting and journaling.
 
-[Equity growth](./imgs/equity_growth.png)
+![Equity growth](./imgs/equity_growth.png)
 
-[Returns distribution](./imgs/returns_distribution.png)
+![Returns distribution](./imgs/returns_distribution.png)
 
-[Win vs Loss distribution](./imgs/win_vs_loss_positions.png)
+![Win vs Loss distribution](./imgs/win_vs_loss_positions.png)
 
 * Position sizing: Kelly criteria, Optimal/Secure/Fractional F, Dynamic PS using
 
-[Positions and position sizing](./imgs/report.png)
+![Positions and position sizing](./imgs/report.png)
 
 * Position management: S/L, T/P, trailing stop, dynamic trailing stop.
 
@@ -50,10 +50,10 @@ Further links will include _S-plus_, _Matlab_, and _Mathematica_.
 
 * Arbitrage spot: triangular arbitrage and extension.
 
-[Arbitrage spot](./imgs/arbitrage_spot.png)
+![Arbitrage spot](./imgs/arbitrage_spot.png)
 
 * Hurst coefficient, special indicators, and special models.
 
 * Pulse continuous impact aggregator for news trading.
 
-[Pulse continuous impact aggregator](./imgs/pulse_continuous_impact_aggregator.png)
+![Pulse continuous impact aggregator](./imgs/pulse_continuous_impact_aggregator.png)
