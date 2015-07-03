@@ -1,5 +1,7 @@
 source('base.R', local=.GlobalEnv)
 
+# holding_time and positions_returns are available.
+
 etl <- function() {
   instr <- 'petrobras'
   assign(instr, loadSymbol(instr), envir=.GlobalEnv)
@@ -27,9 +29,11 @@ vectorized <- function() {
   85
 }
 
-beginEA <- function() {}
+beginEA <- function() {
 
-# holding_time and positions_returns are available.
+}
+
+
 tickEA <- function() {
   if (nrow(open_positions) > 0) {
     if (positions_returns[1] < -0.2 || positions_returns[1] > 0.2)
@@ -40,7 +44,9 @@ tickEA <- function() {
     buy()
 }
 
-endEA <- function() {}
+endEA <- function() {
+
+}
 
 #
 # Simulation.
