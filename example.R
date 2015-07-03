@@ -32,8 +32,7 @@ beginEA <- function() {}
 # holding_time and positions_returns are available.
 tickEA <- function() {
   if (nrow(open_positions) > 0) {
-    if (positions_returns[1] < -0.2 || positions_returns[1] > 0.2 || 
-          sum(holding_time >= 38) > 0)
+    if (positions_returns[1] < -0.2 || positions_returns[1] > 0.2)
       closePosition(1)
   }
   
@@ -51,5 +50,5 @@ runExpertAdvisor(etl, vectorized, beginEA, tickEA, endEA,
 
 runEventProfiler()
 
-report <- generateReport(F)
+report <- generateReport(T)
 report
