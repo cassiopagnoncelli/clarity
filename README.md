@@ -9,14 +9,6 @@ statistical mechanics, chaos, etc), __Clarity__ proposal offers a
 handful of possibilities to leverage algotraders from portfolio theory to
 arbitrage to high frequency trading.
 
-## Description
-
-As for the mechanics behind __Clarity__, it works alike
-
-#### Akin to _Meta Trader_, with the standard `begin()`, `start()`, and `end()`.
-
-![begin-tick-end loop](./imgs/begin_tick_end.png)
-
 #### ETL equities and derivatives
 
 Indicators and instruments are available for pre-loading and pre-calculation.
@@ -59,8 +51,6 @@ Act according to the position evolution using the basic or more elaborate techni
 * Databases: _Postgresql_, _MySQL_, _MariaDB_, etc. 
 * Further links will include _S-plus_, _Matlab_, and _Mathematica_.
 
-#### Parameter optimisation
-
 #### Arbitrage spot
 
 Comes with an extended triangular arbitrage module to latent arbitrage opportunities.
@@ -72,3 +62,11 @@ Comes with an extended triangular arbitrage module to latent arbitrage opportuni
 Facing either same or opposite directions, an one-axis view over events at different impact levels plays in important role on strategy's success.
 
 ![Pulse continuous impact aggregator](./imgs/pulse_continuous_impact_aggregator.png)
+
+#### Every tick
+
+Alike _MetaTrader_, the well known tool for retail traders, __Clarity__ bundles the standard loop `begin()`-`start()`-`end()`.
+
+![begin-tick-end loop](./imgs/begin_tick_end.png)
+
+Parameter optimisation can be performed using genetic algorithms, simulated annealing, and a few others depending on parameters restrictions.
