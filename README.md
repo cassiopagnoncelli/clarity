@@ -30,6 +30,8 @@ Track position evolution throughout the trades and diagnose what are their behav
 
 ![Win vs Loss distribution](./imgs/win_vs_loss_positions.png)
 
+All events involving the backend is tracked in journaling. Further applications include error correction, abnormality detection, and also serve as a simplex channel to the frontend.
+
 ![Journaling](./imgs/journaling.png)
 
 #### Position sizing
