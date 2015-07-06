@@ -30,7 +30,7 @@ Track position evolution throughout the trades and diagnose what are their behav
 
 ![Win vs Loss distribution](./imgs/win_vs_loss_positions.png)
 
-All events involving the backend is tracked in journaling. Further applications include error correction, abnormality detection, and also serve as a simplex channel to the frontend.
+All backend events are tracked in journaling. Journaling is a simplex channel to the frontend serving as a communication tool informing notification different levels, from warnings to errors. Further applications include error correction, abnormality detection.
 
 ![Journaling](./imgs/journaling.png)
 
