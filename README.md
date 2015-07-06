@@ -34,7 +34,7 @@ All backend events are tracked in journaling. Journaling is a simplex channel to
 
 ![Journaling](./imgs/journaling.png)
 
-Further applications include error correction, abnormality detection.
+Further applications include abnormality detection and error correction & recovery.
 
 #### Position sizing
 
