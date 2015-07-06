@@ -31,7 +31,8 @@ beginEA <- function() {
 
 }
 
-# holding_time and positions_returns are available.
+# Available global variables:
+# - holding_time, positions_returns, open_positions.
 tickEA <- function() {
   if (nrow(open_positions) > 0) {
     if (positions_returns[1] < -0.2 || positions_returns[1] > 0.2)
@@ -54,5 +55,5 @@ runExpertAdvisor(etl, vectorized, beginEA, tickEA, endEA,
 
 runEventProfiler()
 
-report <- generateReport(T)
+report <- generateReport(F)
 report
