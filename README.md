@@ -2,7 +2,7 @@ __Clarity__ is a framework for quickly and professionally R&D new strategies
 for equities and derivatives.
 
 It is built on top of the powerful _R_ programming language, providing bindings
-to _C_, _C++_ and the popular databases.
+to _C_, _C++_ as well as the most popular databases.
 
 Beyond _R_'s standard functionalities (basic statistics, time series,
 statistical mechanics, chaos, etc), __Clarity__ proposal offers a
@@ -30,6 +30,8 @@ Track position evolution throughout the trades and diagnose what are their behav
 
 ![Win vs Loss distribution](./imgs/win_vs_loss_positions.png)
 
+![Journaling](./imgs/journaling.png)
+
 #### Position sizing
 
 Position sizing is an important part in scaling the trading strategy and there are optimal ways to calculate the right amount for each strategy. Widely known position sizing methods are Kelly criteria and Optimal/Fractional/Secure F.
@@ -49,7 +51,8 @@ Act according to the position evolution using the basic or more elaborate techni
 * Langauges: _C_, _C++_. 
 * Data providers: _Quandl_. 
 * Databases: _Postgresql_, _MySQL_, _MariaDB_, etc. 
-* Further links will include _S-plus_, _Matlab_, and _Mathematica_.
+
+Further links will include _S-plus_, _Matlab_,  _Mathematica_, and _Q_ (Kdb).
 
 #### Arbitrage spot
 
@@ -63,9 +66,9 @@ Facing either same or opposite directions, an one-axis view over events at diffe
 
 ![Pulse continuous impact aggregator](./imgs/pulse_continuous_impact_aggregator.png)
 
-#### Every tick
+#### Vectorized- and Iterated-based Simulation
 
-Alike _MetaTrader_, the well known tool for retail traders, __Clarity__ bundles the standard loop `begin()`-`start()`-`end()`.
+Alike _MetaTrader_, the well known tool for retail traders, __Clarity__ bundles the standard iteration loop `begin()`-`start()`-`end()`, specially useful in HFT, and the traditional vector-based simulation, as in _Matlab_, in one single environment enabling both approaches to be used simultaneously.
 
 ![begin-tick-end loop](./imgs/begin_tick_end.png)
 
