@@ -46,6 +46,7 @@ library('parallel')
 # Database.
 library('DBI')
 library('RPostgreSQL')       # Postgres interface via psqlODBC libiodbc-devel iodbc
+library('rredis')            # Redis wrapper
 #library('RNetCDF')           # NetCDF's array storage-optimized structure
 library('foreign')           # Read Minitab, S, SAS, SPSS, Stata, Weka, etc
 
@@ -54,9 +55,9 @@ library('R.matlab')
 
 # Dataset manipulation and maneuvering.
 library('reshape')
+library('dplyr')             # plyr's next iteration.
 #library('rescaler')
-#library('dplyr')
-#library('plyr')
+
 #library('sqldf')
 
 ## Time series modeling.
@@ -182,5 +183,6 @@ library('RUnit')             # Unit testing
 
 ## Plot.
 library('ggplot2')
+library('ggvis')
 library('corrgram')
 library('psych')             # Spider chart

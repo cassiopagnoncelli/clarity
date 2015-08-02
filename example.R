@@ -56,4 +56,4 @@ runExpertAdvisor(etl, vectorized, beginEA, tickEA, endEA,
 runEventProfiler()
 
 report <- generateReport(F)
-report
+#report
