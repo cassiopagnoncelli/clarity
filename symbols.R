@@ -11,7 +11,7 @@ library('Quandl')
 Quandl.auth("VAUwWyRdTWiYLnedNhuy")
 
 quandlList <- function(return_symbols = FALSE) {
-  system('./list-quandl.sh', intern=return_symbols)
+  system('sh list.sh quandl', intern=return_symbols)
 }
 
 quandl <- function(code, amalgamize = TRUE) {
@@ -178,7 +178,7 @@ whatis <- .quandlMetaLoad
 # Instruments.
 #
 symbolsList <- function(return_symbols = FALSE) {
-  system('./list-symbols.sh', intern=return_symbols)
+  system('sh list.sh symbols', intern=return_symbols)
 }
 
 insertSymbol <- function(instrument_name, df, rename.columns=F) {
@@ -327,7 +327,7 @@ downloadSymbols <- function() {
 # Indicators.
 #
 indicatorsList <- function(return_symbols = FALSE) {
-  system('./list-indicators.sh', intern=return_symbols)
+  system('sh list.sh indicators', intern=return_symbols)
 }
 
 indicatorInsert <- function(name, df, rename.columns=FALSE) {

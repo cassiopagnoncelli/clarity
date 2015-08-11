@@ -53,7 +53,7 @@ endEA <- function() {
 runExpertAdvisor(etl, vectorized, beginEA, tickEA, endEA,
                  list(deposit=10000, journaling=FALSE))
 
-runEventProfiler()
+#runEventProfiler()
 
 report <- generateReport(F)
 #report
