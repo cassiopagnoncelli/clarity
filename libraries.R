@@ -94,6 +94,8 @@ library('fractaldim')
 library('quantchem')         # Quantitative chemical analysis
 
 ## Machine learning and dynamic models.
+library('h2o')
+
 library('forecast')
 
 library('arules')
@@ -104,6 +106,8 @@ library('sm')                # Smoothing
 library('nnet')
 library('neuralnet')
 library('RSNNS')
+library('darch')             # Deep learning
+library('deepnet')           # Deep learning
 
 library('kohonen')           # SOM
 library('som')
