@@ -52,11 +52,12 @@ Act according to the position evolution using the basic or more elaborate techni
 
 #### Links to other technologies
 
-* Langauges: _C_, _C++_. 
+* Languages: _C_, _C++_. 
 * Data providers: _Quandl_. 
-* Databases: _Postgresql_, _MySQL_, _MariaDB_, etc. 
+* Databases: _Postgresql_ and all databases supported by  _DBI_.
+* Platforms: _Matlab_.
 
-Further links will include _S-plus_, _Matlab_,  _Mathematica_, and _Q_ (Kdb).
+Further links will include _S-plus_, _Mathematica_, and _Q_ (Kdb).
 
 #### Arbitrage spot
 
