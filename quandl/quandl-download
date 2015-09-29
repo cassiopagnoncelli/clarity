@@ -1,0 +1,47 @@
+#!/bin/bash
+
+auth="VAUwWyRdTWiYLnedNhuy"
+
+# Parameters.
+if [ $# != 1 ]
+then
+  echo "Quandl code required."
+  exit
+fi
+
+quandl_code=$1
+clarity_key=$(echo ${quandl_code} | sed "s/\//_/g" | tr [[:upper:]] [[:lower:]])
+
+# Download meta information.
+wget https://www.quandl.com/data/$1 -q -O quandl_html.tmp
+title=$(grep -A 1 "<td>Dataset Name</td>" quandl_html.tmp | tail -1 | sed "s/<td>//1" | sed "s/<\/td>//1")
+description=$(grep -A 1 "<td>Description</td>" quandl_html.tmp | tail -1 | sed "s/<td><p sanitize=\"true\">//1" | sed "s/<\/p><\/td>//1")
+rm quandl_html.tmp
+
+# Download dataset.
+curl --silent "https://www.quandl.com/api/v3/datasets/${quandl_code}.csv?auth_token=${auth}" > /tmp/quandl.csv
+
+# Store in pg through R's storage unit.
+R -q --vanilla <<EOF
+library('RPostgreSQL')
+library('xts')
+
+pg_driver <- dbDriver('PostgreSQL')
+pg_con <- dbConnect(pg_driver, dbname='quandl')
+
+if (!dbExistsTable(pg_con, '${clarity_key}')) {
+  # Dataset.
+  toDate <- function(x) as.Date(x, origin='1899-12-30')
+  z <- read.zoo('/tmp/quandl.csv', header=TRUE, sep=',', FUN=toDate)
+  dbWriteTable(pg_con, '${clarity_key}', as.data.frame(sort(as.xts(z), by='Date')))
+
+  # Meta information.
+  row <- data.frame(quandl_code='${quandl_code}', name='${clarity_key}', title='${title}', description='${description}')
+  dbWriteTable(pg_con, 'meta', row, append=TRUE)
+}
+
+dbDisconnect(pg_con)
+dbUnloadDriver(pg_driver)
+EOF
+
+rm /tmp/quandl.csv

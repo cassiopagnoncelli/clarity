@@ -88,6 +88,7 @@ Parameter optimisation can be performed using genetic algorithms, simulated anne
 - Transaction costs, commission and spread.
 - Slippage simulation according to volatility.
 - Order book simulation (FIFO and the other one).
-- Append position's return in open_positions
+- Append position's return in open\_positions
 - Add kelly criteria in reporting result for multi-asset
 - Portfolio report
+- Rewrite symbols.R
