@@ -5,6 +5,9 @@ library('xts')
 library('quantmod')
 library('Quandl')
 
+disconnect <- function() { lapply(dbListConnections(PostgreSQL()), dbDisconnect) }
+disconnect()
+
 #
 # Quandl.
 #
@@ -23,19 +26,14 @@ quandl <- function(code, amalgamize = TRUE) {
   series_exists <- rep(TRUE, length(code))
   for (i in 1:length(code))
     if (!dbExistsTable(pg_con, quandl2name(code[i])))
-      series_exists[i] <- FALSE
+      system(paste('sh quandl-download "', code, '"', sep=''))
+  
+  for (i in 1:length(code))
+    .quandlLoad(code[i])
   
   # Disconnect.
   dbDisconnect(pg_con)
   dbUnloadDriver(pg_driver)
-  
-  # Download and load series.
-  for (i in 1:length(code))
-    if (!series_exists[i])
-      .quandlDownload(code[i])
-  
-  for (i in 1:length(code))
-    .quandlLoad(code[i])
   
   # Return names
   if (amalgamize) {
@@ -54,47 +52,6 @@ quandl <- function(code, amalgamize = TRUE) {
 
 quandl2name <- function(code) {
   tolower(sub('/', '_', code))
-}
-
-.quandlDownload <- function(code) {
-  assign((instrument_name <- quandl2name(code)),
-         sort(Quandl(code, type='xts'), by='Date'),
-         envir=.GlobalEnv)
-  
-  .quandlInsert(instrument_name)
-  
-  title_description <- system(paste("./quandl/get-meta.sh", code), intern=T)
-  .quandlMetaInsert(code, title_description[1], title_description[2])
-  
-  instrument_name
-}
-
-.quandlInsert <- function(df) {
-  if (is.character(df)) {
-    instrument_name <- quandl2name(df)
-    df <- get(df, envir=.GlobalEnv)
-  } else {
-    instrument_name <- tolower(as.character(substitute(df)))
-  }
-  
-  if ((n <- nrow(df)) <= 0 | ncol(df) < 1)
-    return(FALSE)
-  
-  # Open connection.
-  pg_driver <- dbDriver('PostgreSQL')
-  pg_con <- dbConnect(pg_driver, dbname='quandl')
-  
-  # Insert.
-  if (!dbExistsTable(pg_con, instrument_name))
-    result <- dbWriteTable(pg_con, instrument_name, as.data.frame(df))
-  else
-    result <- F
-  
-  # Disconnect.
-  dbDisconnect(pg_con)
-  dbUnloadDriver(pg_driver)
-  
-  result
 }
 
 .quandlLoad <- function(instrument, type='xts', limit=F) {   # type == xts, data.frame
@@ -132,27 +89,7 @@ quandl2name <- function(code) {
     return(FALSE)
 }
 
-.quandlMetaInsert <- function(quandl_code, title, description) {
-  # Open connection.
-  pg_driver <- dbDriver('PostgreSQL')
-  pg_con <- dbConnect(pg_driver, dbname='quandl')
-  
-  # Insert row.
-  row <- data.frame(quandl_code=quandl_code,
-                    name=quandl2name(quandl_code),
-                    title=title,
-                    description=description)
-  
-  result <- dbWriteTable(pg_con, 'meta', row, append=T)
-  
-  # Disconnect.
-  dbDisconnect(pg_con)
-  dbUnloadDriver(pg_driver)
-  
-  result
-}
-
-.quandlMetaLoad <- function(name) {
+whatis <- function(name) {
   if (!exists(as.character(substitute(name))))
     name <- as.character(substitute(name))
   
@@ -162,7 +99,9 @@ quandl2name <- function(code) {
   
   # Insert row.
   sql <- paste(
-    "SELECT * FROM meta WHERE name = '", quandl2name(name), "'", sep='')
+    "SELECT * FROM meta WHERE name IN ('",
+    paste(unlist(Map(quandl2name, name)), collapse="','"),
+    "')", sep='')
   
   result <- dbGetQuery(pg_con, sql)[,-1]
   
@@ -172,7 +111,6 @@ quandl2name <- function(code) {
   
   t(result)
 }
-whatis <- .quandlMetaLoad
 
 #
 # Instruments.

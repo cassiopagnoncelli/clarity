@@ -36,7 +36,7 @@ if (!dbExistsTable(pg_con, '${clarity_key}')) {
   dbWriteTable(pg_con, '${clarity_key}', as.data.frame(sort(as.xts(z), by='Date')))
 
   # Meta information.
-  row <- data.frame(quandl_code='${quandl_code}', name='${clarity_key}', title='${title}', description='${description}')
+  row <- data.frame(name='${clarity_key}', title='${title}', description='${description}', type='indicator', source='Quandl', quandl_code='${quandl_code}')
   dbWriteTable(pg_con, 'meta', row, append=TRUE)
 }
 
