@@ -27,7 +27,7 @@ library('RPostgreSQL')
 library('xts')
 
 pg_driver <- dbDriver('PostgreSQL')
-pg_con <- dbConnect(pg_driver, dbname='quandl')
+pg_con <- dbConnect(pg_driver, dbname='clarity')
 
 if (!dbExistsTable(pg_con, '${clarity_key}')) {
   # Dataset.
@@ -36,7 +36,7 @@ if (!dbExistsTable(pg_con, '${clarity_key}')) {
   dbWriteTable(pg_con, '${clarity_key}', as.data.frame(sort(as.xts(z), by='Date')))
 
   # Meta information.
-  row <- data.frame(name='${clarity_key}', title='${title}', description='${description}', type='indicator', source='Quandl', quandl_code='${quandl_code}')
+  row <- data.frame(name='${clarity_key}', title='${title}', description='${description}', type='indicator', source='quandl', code='${quandl_code}')
   dbWriteTable(pg_con, 'meta', row, append=TRUE)
 }
 

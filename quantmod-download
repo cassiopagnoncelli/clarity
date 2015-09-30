@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# Parameters.
+if [ $# != 1 ]
+then
+  echo "Yahoo code required."
+  exit
+fi
+
+code=$1
+clarity_key=$(echo ${code} | sed "s/\//_/g" | tr [[:upper:]] [[:lower:]] | tr [[:punct:]] _)
+
+# Store in pg through R's storage unit.
+R -q --vanilla <<EOF
+library('DBI')
+library('RPostgreSQL')  # Dependencies: # zypper install psqlODBC libiodbc-devel iodbc
+library('zoo')
+library('xts')
+library('quantmod')
+
+ticker <- "${code}"
+clarity_key <- "${clarity_key}"
+
+pg_driver <- dbDriver('PostgreSQL')
+pg_con <- dbConnect(pg_driver, dbname='clarity')
+
+dbRemoveTable(pg_con, clarity_key)
+
+dbWriteTable(pg_con, clarity_key, as.data.frame(
+  get(getSymbols(ticker, from=as.Date('1970-01-01'), env=.GlobalEnv))))
+
+dbWriteTable(
+  pg_con,
+  'meta', 
+  data.frame(
+    name=clarity_key,
+    title='',
+    description='',
+    type='instrument',
+    source='yahoo',
+    code=ticker),
+  append=TRUE)
+
+dbDisconnect(pg_con)
+dbUnloadDriver(pg_driver)
+EOF

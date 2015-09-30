@@ -1,0 +1,74 @@
+# Get American stock symbols
+  #american <- stockSymbols()
+  #print(american)
+  
+  # Macroeconomics.
+  # More indicators at
+  #http://en.wikipedia.org/wiki/Federal_Reserve_Economic_Data
+  #http://fossies.org/linux/gretl/share/bcih/fedstl.idx
+  ticker_list <- c(
+    # Interest rates of different maturities and credit spreads
+    'AAA',          # Moody's Seasoned Aaa Corporate Bond Yield©
+    'BAA',          # Moody's Seasoned Baa Corporate Bond Yield
+    'MORTG',        # 30-Year Conventional Mortgage Rate
+    'GS1',          # 1-Year Treasury Constant Maturity Rate
+    'GS10',         # 10-Year Treasury Constant Maturity Rate
+    'GS20',         # 20-Year Treasury Constant Maturity Rate
+    'DTB3',         # 3-Month Treasury Bill: Secondary Market Rate
+    'TB1YR',        # 1-Year Treasury Bill: Secondary Market Rate
+    # Business conditions
+    'INDPRO',       # Industrial Production Index
+    'BUSINV',       # Total Business Inventories
+    'ISRATIO',      # Total Business: Inventories to Sales Ratio
+    'PPIENG',       # Producer Price Index by Commodity Fuels & Related
+    #   Products & Power
+    'PPIACO',       # Producer Price Index for All Commodities
+    'TCU',          # Capacity Utilization: Total Industry
+    'NAPM',         # ISM Manufacturing: PMI Composite Index
+    # Employment
+    'AWHI',         # Aggregate Weekly Hours: Production and Nonsupervisory Employees:
+    #   Total Private Industries
+    'UNRATE',       # Civilian Unemployment Rate
+    'EMRATIO',      # Civilian Employment-Population Ratio
+    'LNS14100000',  # Unemployment Rate - Full-Time Workers
+    # Others
+    'ALTSALES',     # Light Weight Vehicle Sales: Autos & Light Trucks
+    'AMBNS',        # Adjusted Monetary Base
+    'AMBSL',        # St. Louis Adjusted Monetary Base
+    'FEDFUNDS',     # Effective Federal Funds Rate, %
+    'GASPRICE',     # Natural Gas Price: Henry Hub, LA© (DISCONTINUED)
+    'NPPTTL',       # Total Nonfarm Private Payroll Employment
+    'OILPRICE',     # Spot Oil Price: West Texas Intermediate (DISCONTINUED SERIES)
+    'PAYEMS',       # All Employees: Total nonfarm
+    'TB3MS'         # 3-Month Treasury Bill: Secondary Market Rate
+  )
+
+    'ABCB4.SA', 'ABC Banco', 'abc',
+    'BVMF3.SA', 'BMF Bovespa', 'bmf',
+    'PSSA3.SA', 'Porto Seguro', 'porto_seguro',
+    'RSID3.SA', 'Rossi', 'rossi',
+    'CYRE3.SA', 'Cyrela', 'cyrela',
+    'DTEX3.SA', 'Duratex', 'duratex',
+    'MRVE3.SA', 'MRV Engenharia', 'mrv',
+    'GFSA3.SA', 'Gafisa', 'gafisa',
+    'LUPA3.SA', 'Lupatech', 'lupatech',
+    'PLAS3.SA', 'Plascar', 'plascar',
+    'POMO4.SA', 'Marcopolo', 'marcopolo',
+    'WEGE3.SA', 'Weg', 'weg',
+    'VALE',     'Vale do Rio Doce', 'vale',
+    'OGXP3.SA', 'OGX Petróleo', 'ogx',
+    'PETR4.SA', 'Petrobrás', 'petrobras',
+    'DASA3.SA', 'DASA', 'dasa',
+    'CSNA3.SA', 'Siderúrgia Nacional', 'csna',
+    'GGBR4.SA', 'Gerdau', 'gerdau',
+    'USIM5.SA', 'Usiminas', 'usiminas',
+    'TOTS3.SA', 'Totvs', 'totvs',
+    'BTOW3.SA', 'B2W', 'b2w',
+    'HYPE3.SA', 'Hypermarcas', 'hypermarcas',
+    'LAME4.SA', 'Americanas', 'americanas',
+    'LREN3.SA', 'Renner', 'renner',
+    'RENT3.SA', 'Localiza', 'localiza',
+    'PDGR3.SA', 'PDG Realty', 'pdg',
+    'GFSA3.SA', 'Gafisa Realty', 'gafisa',
+    'TCSA3.SA', 'Tecnisa Realty', 'tecnisa',
+    'BISA3.SA', 'Brookfield Realty', 'brookfield'

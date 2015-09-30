@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Notice.
+echo "Before installing, make sure "
+echo "(1) your internet connection is working properly,"
+echo "(2) your R satisfies packages dependencies,"
+echo "(3) a working installation of PostgreSQL is up and running accessible from command line with no parameters."
+echo 
+echo -n "Proceed? [y/N] "
+read -n 1 proceed
+echo
+
+if [ "${proceed}" != "y" ]
+then
+  exit
+fi
+
+# Database creation.
+echo "CREATE DATABASE clarity;" | psql
+
+# Symbols downloading.
+echo "Symbols download."
+
+sh quantmod-download "VALE"
+
+for i in $(cat quandl.txt)
+do
+  sh quandl-download "$i"
+done
+
+# Success.
+echo "Clarity should be up and running now. Start off by running 'example.R' inside your RStudio."
