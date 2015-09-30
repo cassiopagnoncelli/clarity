@@ -1,18 +1,17 @@
 source('base.R', local=.GlobalEnv)
 
 etl <- function() {
-  instr <- 'petrobras'
-  assign(instr, loadSymbol(instr), envir=.GlobalEnv)
-  addInstrument(instr, 6)
-  setDefaultInstrument(instr)
+  load_instruments('pssa3_sa', 'p')
+  addInstrument('p')
+  setDefaultInstrument('p')
 }
 
 vectorized <- function() {
   n <- nrow(all_series)
   
-  ma5 <- c(rep(0, 4), rollapply(all_series, 5, mean))
-  ma14 <- c(rep(0, 13), rollapply(all_series, 14, mean))
-  ma80 <- c(rep(0, 79), rollapply(all_series, 80, mean))
+  ma5 <- c(rep(0, 4), rollapply(p, 5, mean))
+  ma14 <- c(rep(0, 13), rollapply(p, 14, mean))
+  ma80 <- c(rep(0, 79), rollapply(p, 80, mean))
   ma5d <- c(0, ma5[-n])
   ma14d <- c(0, ma14[-n])
   

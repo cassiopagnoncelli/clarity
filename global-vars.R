@@ -1,13 +1,13 @@
 eval({
   stopped <- FALSE
   instruments <- data.frame(name=c(), series_id=c())
-  open <- NULL
-  high <- NULL
-  low <- NULL
-  close <- NULL
-  volume <- NULL
-  adjusted <- NULL
-  ohlc <- NULL
+  #open <- NULL
+  #high <- NULL
+  #low <- NULL
+  #close <- NULL
+  #volume <- NULL
+  #adjusted <- NULL
+  #ohlc <- NULL
   default_instrument <- NULL
   default_instrument_id <- NULL
   unit <- NULL

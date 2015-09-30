@@ -34,6 +34,11 @@ matricize <- function(x, lag=12) {
   m
 }
 
+df_trim <- function(df) {
+  limits <- range(which(apply(is.na(df), 1, sum) == 0))
+  df[limits[1]:limits[2],]
+}
+
 # A substitute for Sharpe index.
 performanceIndex <- function(returns, benchmark=NA) {
   abs_performance <- function(p) { geomean(p) / (sqrt((1 + sd(p)) / (1 - sd(p))) - 1) }

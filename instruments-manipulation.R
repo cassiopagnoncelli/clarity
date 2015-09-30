@@ -1,6 +1,6 @@
 library('compiler')
 
-addInstrument <- function(name, series_id) {
+addInstrument <- function(name, series_id=1) {
   column_to_insert <- ifelse(is.null(ncol(all_series)), 1, ncol(all_series) + 1)
   
   assign('instruments',
@@ -14,15 +14,15 @@ addInstrument <- function(name, series_id) {
 }
 
 setDefaultInstrument <- function(name, set_ohlc = TRUE) {
-  if (set_ohlc) {
-    assign('open', Op(get(name)), envir=.GlobalEnv)
-    assign('high', Hi(get(name)), envir=.GlobalEnv)
-    assign('low', Lo(get(name)), envir=.GlobalEnv)
-    assign('close', Cl(get(name)), envir=.GlobalEnv)
-    assign('volume', Vo(get(name)), envir=.GlobalEnv)
-    assign('adjusted', Ad(get(name)), envir=.GlobalEnv)
-    assign('ohlc', OHLC(get(name)), envir=.GlobalEnv)
-  }
+  #if (set_ohlc) {
+  #  assign('open', Op(get(name)), envir=.GlobalEnv)
+  #  assign('high', Hi(get(name)), envir=.GlobalEnv)
+  #  assign('low', Lo(get(name)), envir=.GlobalEnv)
+  #  assign('close', Cl(get(name)), envir=.GlobalEnv)
+  #  assign('volume', Vo(get(name)), envir=.GlobalEnv)
+  #  assign('adjusted', Ad(get(name)), envir=.GlobalEnv)
+  #  assign('ohlc', OHLC(get(name)), envir=.GlobalEnv)
+  #}
   
   assign('default_instrument', name, envir=.GlobalEnv)
   assign('default_instrument_id',
