@@ -1,6 +1,9 @@
 # http://www.uio.no/studier/emner/matnat/ifi/INF2340/v05/foiler/sim01.pdf
 # http://ocw.mit.edu/courses/mechanical-engineering/2-29-numerical-fluid-mechanics-fall-2011/lecture-notes/MIT2_29F11_lect_12.pdf
 # https://en.wikipedia.org/wiki/Finite_difference
+# https://en.wikipedia.org/wiki/Five-point_stencil
+# http://stackoverflow.com/questions/14082525/how-to-calculate-first-derivative-of-time-series
+
 
 # Re-code for h > 1.
 backward_difference <- function(x, h=1, prepend=TRUE) {
