@@ -19,14 +19,10 @@ fi
 echo "CREATE DATABASE clarity;" | psql
 
 # Symbols downloading.
-echo "Symbols download."
-
-sh quantmod-download "VALE"
-
-for i in $(cat quandl.txt)
-do
-  sh quandl-download "$i"
-done
+echo "Downloading indicators and instruments..."
+for i in $(cat quantmod.txt); do sh quantmod-download "$i"; done
+for i in $(cat quandl.txt); do sh quandl-download "$i"; done
 
 # Success.
 echo "Clarity should be up and running now. Start off by running 'example.R' inside your RStudio."
+

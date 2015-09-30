@@ -9,9 +9,8 @@
 # http://stats.stackexchange.com/questions/99160/kalman-filtering-smoothing-and-parameter-estimation-for-state-space-models-in-r
 # http://www.bearcave.com/finance/random_r_hacks/kalman_smooth.html
 
-
 # Re-code for h > 1.
-backward_difference <- function(x, h=1, prepend=TRUE) {
+backward_difference <- function(x, h=1) {
   # Lag.
   t   <- x
   t_1 <- Lag(x, 1)
@@ -30,12 +29,28 @@ backward_difference <- function(x, h=1, prepend=TRUE) {
   )
   colnames(df) <- c('velocity', 'acceleration', 'jolt')
   
-  if (prepend)
-    df <- data.frame(x, df)
+  df <- data.frame(x, df)
   
   # Remove NA.
   limits <- range(which(apply(is.na(df), 1, sum) == 0))
   df <- df[limits[1]:limits[2],]
+}
+
+backward_difference_forecast <- function(df, h) {
+  rowmap <- function(row, h) {
+    sum(row * c(1, 1, 1/2, 1/6) * c(1, h, h^2, h^3))
+  }
   
-  df
+  names <- c('h_1')
+  d <- data.frame(apply(df, 1, rowmap, 1))
+  if (h > 1)
+    for (i in 2:h) {
+      names <- c(names, paste('h_', i, sep=''))
+      x <- apply(df, 1, rowmap, i)
+      d <- data.frame(d, x)
+    }
+  
+  colnames(d) <- names
+  
+  d
 }
