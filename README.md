@@ -95,3 +95,7 @@ Parameter optimisation can be performed using genetic algorithms, simulated anne
 - Amend FRED meta info: http://stackoverflow.com/questions/24985267/quantmod-fred-metadata-in-r
 - Embed date into journal
 - load\_instruments' trim function
+
+## Installation
+
+Have your PostgreSQL up and running along bash shell installed in your Linux or Mac and run 

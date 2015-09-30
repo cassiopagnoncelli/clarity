@@ -1,10 +1,12 @@
 #!/bin/bash
 
 # Notice.
-echo "Before installing, make sure "
-echo "(1) your internet connection is working properly,"
-echo "(2) your R satisfies packages dependencies,"
-echo "(3) a working installation of PostgreSQL is up and running accessible from command line with no parameters."
+echo "Before installing, make sure"
+echo
+echo "(1) your OS dispose of a bash shell (eg. Linux, Mac, Unix, Solaris, HP),"
+echo "(2) your internet connection is working properly,"
+echo "(3) your R satisfies packages dependencies,"
+echo "(4) a working installation of PostgreSQL is up and running accessible from command line with no parameters."
 echo 
 echo -n "Proceed? [y/N] "
 read -n 1 proceed
