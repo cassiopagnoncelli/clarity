@@ -98,4 +98,8 @@ Parameter optimisation can be performed using genetic algorithms, simulated anne
 
 ## Installation
 
-Have your PostgreSQL up and running along bash shell installed in your Linux or Mac and run 
+Run
+
+```
+./setup
+```
