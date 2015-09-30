@@ -103,3 +103,5 @@ Run
 ```
 ./setup
 ```
+
+and follow the given instructions.
