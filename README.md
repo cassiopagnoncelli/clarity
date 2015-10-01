@@ -63,7 +63,7 @@ Further links will include _S-plus_, _Mathematica_, and _Q_ (Kdb).
 
 Comes with an extended triangular arbitrage module to spot latent arbitrage opportunities.
 
-![Arbitrage spot](./markdown/arbitrage_spot.png)
+![Arbitrage spot](http://s1.postimg.org/clz7qfum7/arbitrage_spot.png)
 
 #### Impact aggregator
 
