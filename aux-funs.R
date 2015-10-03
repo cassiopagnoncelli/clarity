@@ -25,13 +25,34 @@ removeOutliers <- function(x, na.rm = TRUE, ...) {
 matricize <- function(x, lag=12) {
   n <- length(x)
   
-  m <- c()
-  for (i in 1:lag) 
-    m <- cbind(m, x[seq(i, n - lag + i)])
+  df <- data.frame(x=Lag(x, 0))
+  if (lag > 1)
+    for (i in 1:(lag-1))
+      df <- data.frame(df, Lag(x, i))
   
-  colnames(m) <- paste('t_', seq(0, lag-1), sep='')
+  df <- na.exclude(df)
   
-  m
+  colnames(df) <- paste('t_', seq(0, lag-1), sep='')
+  
+  df
+}
+
+forward_matricize <- function(p, window) {
+  v <- as.vector(p)
+  
+  d <- data.frame(v)
+  if (window > 1)
+    for (i in 2:window)
+      d <- data.frame(d, v[i : (i + length(v) - 1)])
+  
+  colnames(d) <- paste('f', 1:window, sep='_')
+  
+  if (sum(class(p) == 'xts') > 0)
+    row.names(d) <- index(p)
+  else if (sum(class(p) == 'data.frame') > 0)
+    row.names(d) <- row.names(p)
+  
+  d
 }
 
 df_trim <- function(df) {

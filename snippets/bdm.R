@@ -53,11 +53,14 @@ forecast.bdm <- function(df, ahead) {
 
 bdm <- function(x, h=1, prepend=FALSE, remove.na=TRUE) {
   d <- backward_difference(x, h[1])
+  dcols <- ncol(d)
   
   if (length(h) > 1)
     for (i in 2:length(h))
       d <- data.frame(d, backward_difference(x, h[i]))
   
+  d <- d[, c(1:length(h) * dcols - 2, 1:length(h) * dcols - 1, 1:length(h) * dcols)]
+    
   if (prepend)
     d <- data.frame(x, d)
   
@@ -85,8 +88,8 @@ plot.bdm <- function(bdm) {
   
   span <- input_slider(0.2, 1, value = 0.75)
   
-  x <- rownames(bdm$d)
-  x <- 1:length(x)
+  x <- as.Date(rownames(bdm$d))
+  #x <- 1:length(x)
   data.frame(x = x, y = bdm$d[,1]) %>%
     ggvis(~x, ~y, stroke = ~y) %>%
     layer_paths() %>% layer_smooths(span = span)

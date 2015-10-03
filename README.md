@@ -95,6 +95,7 @@ Parameter optimisation can be performed using genetic algorithms, simulated anne
 - Amend FRED meta info: http://stackoverflow.com/questions/24985267/quantmod-fred-metadata-in-r
 - Embed date into journal
 - load\_instruments' trim function
+- start+end dates into indicators table
 
 ## Installation
 
