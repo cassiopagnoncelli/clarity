@@ -33,6 +33,7 @@ results$lm <- list(fit = fit, predicted = predicted)
 fit <- glm(y ~ ., Xy_train, family=binomial())
 predicted <- round(predict(fit, X_test))
 predicted[predicted < 0] <- 0
+predicted[predicted > 1] <- 1
 
 results$glm <- list(fit = fit, predicted = predicted)
 
@@ -64,7 +65,7 @@ results$rpart <- list(fit = fit, predicted = predicted)
 library('randomForest')
 
 fit <- randomForest(as.factor(y)~., Xy_train, ntree=50)
-predicted <- predict(fit, X_test)
+predicted <- as.integer(predict(fit, X_test)) - 1
 
 results$randomForest <- list(fit = fit, predicted = predicted)
 
