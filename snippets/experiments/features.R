@@ -5,7 +5,7 @@ source('snippets/bdm.R')
 source('snippets/ts-outliers.R')
 source('symbols.R')
 
-load_instruments('vale', columns=1:6)
+load_instruments('hype3_sa', columns=1:6)
 colnames(P) <- c(colnames(P)[-6], 'p')
 
 # Backward difference model

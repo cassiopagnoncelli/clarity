@@ -34,7 +34,7 @@ cat("Hit rate when all classifiers agree:\n")
 cat(paste(
   "For class 0:",
   ifelse(sum(agrees_0 == ncol(predictions)) > 0,
-         as.character(mean(as.integer(y_test[which(agrees_0 == ncol(predictions))]))),
+         as.character(mean(as.integer(1-y_test[which(agrees_0 == ncol(predictions))]))),
          "Altogether never agree"),
   paste("(", sum(agrees_0 == ncol(predictions)), " signals.)", sep=''),
   "\n"))
