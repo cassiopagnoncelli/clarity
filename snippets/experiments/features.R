@@ -46,7 +46,7 @@ X.raw <- data.frame(
   p=bdiff$d[,1])
 
 # Response variable
-pos_management <- function(p, lb=0.01, ub=0.05, window=100, zero.class=TRUE) {
+pos_management <- function(p, lb=0.01, ub=0.01, window=25, zero.class=TRUE) {
   if (zero.class) {
     apply(forward_matricize(p, window), 1, function(row) {
       row <- na.exclude(row)

@@ -1,20 +1,18 @@
+library('gmodels')
+library('ROCR')
 source('snippets/experiments/models.R', local=.GlobalEnv)
 
-# Combine and present results.
-result <- data.frame(pred=round(predicted), true=y_test)
-result$pred[result$pred < -1] <- -1
-result$pred[result$pred > 1] <- 1
-
-table(result)
-
-#library('gmodels')
-#CrossTable(result$pred, result$true, prop.chisq = F)
-
-# ROC curves.
-library('ROCR')
-
-roc_pred <- prediction(result$pred, result$true)
-
-#plot(performance(roc_pred, 'tpr', 'fpr'))
-
-performance(roc_pred, 'auc')@y.values[[1]]
+for (i in names(results)) {
+  # Model.
+  cat(paste("\n\nModel:", i, "\n"))
+  result <- data.frame(pred=results[[i]]$predicted, true=y_test)
+  
+  # ROC.
+  roc_pred <- prediction(as.integer(result$pred), as.integer(result$true))
+  #plot(performance(roc_pred, 'tpr', 'fpr'))
+  cat(paste("Error rate:", performance(roc_pred, 'auc')@y.values[[1]], "\n\n"))
+  
+  # Confusion matrix.
+  print(table(result))
+  #CrossTable(result$pred, result$true, prop.chisq = F)
+}

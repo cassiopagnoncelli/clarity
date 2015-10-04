@@ -25,15 +25,22 @@ Xy_test <- Xy[sample_test,]
 
 # lm.
 fit <- lm(y ~ ., Xy_train)
-predicted <- predict(fit, X_test)
+predicted <- round(predict(fit, X_test))
 
 results$lm <- list(fit = fit, predicted = predicted)
+
+# glm.
+fit <- glm(y ~ ., Xy_train, family=binomial())
+predicted <- round(predict(fit, X_test))
+predicted[predicted < 0] <- 0
+
+results$glm <- list(fit = fit, predicted = predicted)
 
 # e1071 (svm).
 library('e1071')
 
 fit <- svm(y ~ ., Xy_train)
-predicted <- predict(fit, X_test)
+predicted <- round(predict(fit, X_test))
 
 results$e1071 <- list(fit = fit, predicted = predicted)
 
@@ -41,7 +48,7 @@ results$e1071 <- list(fit = fit, predicted = predicted)
 library('nnet')
 
 fit <- nnet(y ~ ., Xy_train, size=5)
-predicted <- predict(fit, X_test)
+predicted <- round(predict(fit, X_test))
 
 results$nnet <- list(fit = fit, predicted = predicted)
 
@@ -49,7 +56,7 @@ results$nnet <- list(fit = fit, predicted = predicted)
 library('rpart')
 
 fit <- rpart(y ~ ., Xy_train)
-predicted <- predict(fit, X_test)
+predicted <- round(predict(fit, X_test))
 
 results$rpart <- list(fit = fit, predicted = predicted)
 
@@ -66,7 +73,7 @@ library('monmlp')
 
 fit <- monmlp.fit(as.matrix(X_train), as.matrix(y_train),
                   hidden1=3, n.ensemble=15, monotone=1, bag=TRUE)
-predicted <- monmlp.predict(x=as.matrix(X_test), weights=fit)
+predicted <- round(monmlp.predict(x=as.matrix(X_test), weights=fit))
 
 results$monmlp <- list(fit = fit, predicted = predicted)
 
@@ -74,7 +81,7 @@ results$monmlp <- list(fit = fit, predicted = predicted)
 library('kknn')
 
 fit <- kknn(y ~ ., Xy_train, X_test, k=3, scale=T, distance=2)
-predicted <- fitted(fit)
+predicted <- round(fitted(fit))
 
 results$knn <- list(fit = fit, predicted = predicted)
 
