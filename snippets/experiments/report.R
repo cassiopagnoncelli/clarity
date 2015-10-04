@@ -35,9 +35,16 @@ cat(paste(
   "For class 0:",
   ifelse(sum(agrees_0 == ncol(predictions)) > 0,
          as.character(mean(as.integer(y_test[which(agrees_0 == ncol(predictions))]))),
-         "Altogether never agree"), "\n"))
+         "Altogether never agree"),
+  paste("(", sum(agrees_0 == ncol(predictions)), " signals.)", sep=''),
+  "\n"))
 cat(paste(
   "For class 1:",
   ifelse(sum(agrees_1 == ncol(predictions)) > 0,
          as.character(mean(as.integer(y_test[which(agrees_1 == ncol(predictions))]))),
-         "Altogether never agree"), "\n\n"))
+         "Altogether never agree"),
+  paste("(", sum(agrees_1 == ncol(predictions)), " signals.)", sep=''),
+  "\n\n"))
+
+# Add macroeconomic variables
+# Use data other than raw data without transformation
