@@ -46,5 +46,7 @@ cat(paste(
   paste("(", sum(agrees_1 == ncol(predictions)), " signals.)", sep=''),
   "\n\n"))
 
+truehist(agrees_1)
+
 # Add macroeconomic variables
 # Use data other than raw data without transformation

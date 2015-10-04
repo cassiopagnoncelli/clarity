@@ -12,8 +12,8 @@ sample_test <- setdiff(setdiff(1:x_rows, sample_train), sample_validation)
 
 results <- list()
 
-X <- X.raw
-Xy <- Xy.raw
+X <- X.pca
+Xy <- Xy.pca
 
 X_train <- X[sample_train,]
 y_train <- y[sample_train]
