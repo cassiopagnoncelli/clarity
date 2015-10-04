@@ -96,6 +96,7 @@ Parameter optimisation can be performed using genetic algorithms, simulated anne
 - Embed date into journal
 - load\_instruments' trim function
 - start+end dates into indicators table
+- R mirror at setup
 
 ## Installation
 

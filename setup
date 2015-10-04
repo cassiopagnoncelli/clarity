@@ -17,6 +17,15 @@ then
   exit
 fi
 
+# R packages download.
+for i in $(grep -R "library(" * | grep -v "libraries.R" | cut -d":" -f 2 | cut -d "'" -f 2)
+do
+  echo $i
+  R -q --vanilla <<EOF
+install.packages("$i")
+EOF
+done
+
 # Database creation.
 echo "CREATE DATABASE clarity;" | psql
 
