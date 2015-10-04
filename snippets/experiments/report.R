@@ -5,7 +5,7 @@ source('snippets/experiments/models.R', local=.GlobalEnv)
 # Predictions matrix.
 predictions <- c()
 for (i in names(results)) {
-  predictions <- cbind(res, results[[i]]$predicted)
+  predictions <- cbind(predictions, results[[i]]$predicted)
 }
 
 colnames(predictions) <- names(results)
@@ -27,17 +27,17 @@ for (i in names(results)) {
 }
 
 # Combined classifiers results.
-agrees_0 <- sapply(1:length(y_test), function(i) { sum(res[i,] == 0) })
-agrees_1 <- sapply(1:length(y_test), function(i) { sum(res[i,] == 1) })
+agrees_0 <- sapply(1:length(y_test), function(i) { sum(predictions[i,] == 0) })
+agrees_1 <- sapply(1:length(y_test), function(i) { sum(predictions[i,] == 1) })
 
 cat("Hit rate when all classifiers agree:\n")
 cat(paste(
-  "For class 0:", ifelse(sum(agrees_0 == ncol(res)) > 0,
-                   as.character(mean(as.integer(y_test[which(agrees_0 == ncol(res))]))),
-                   "Altogether never agree"), "\n"))
+  "For class 0:",
+  ifelse(sum(agrees_0 == ncol(predictions)) > 0,
+         as.character(mean(as.integer(y_test[which(agrees_0 == ncol(predictions))]))),
+         "Altogether never agree"), "\n"))
 cat(paste(
-  "For class 1:", ifelse(sum(agrees_1 == ncol(res)) > 0,
-                   as.character(mean(as.integer(y_test[which(agrees_1 == ncol(res))]))),
-                   "Altogether never agree"), "\n\n"))
-
-hits <- sapply(1:length(y_test), function(i) { sum(y_test[i] == res[i,]) == 9 })
+  "For class 1:",
+  ifelse(sum(agrees_1 == ncol(predictions)) > 0,
+         as.character(mean(as.integer(y_test[which(agrees_1 == ncol(predictions))]))),
+         "Altogether never agree"), "\n\n"))

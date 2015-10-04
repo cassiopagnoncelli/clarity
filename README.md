@@ -97,6 +97,7 @@ Parameter optimisation can be performed using genetic algorithms, simulated anne
 - load\_instruments' trim function
 - start+end dates into indicators table
 - R mirror at setup
+- migrate graphics to ggplot2
 
 ## Installation
 
