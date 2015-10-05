@@ -8,7 +8,7 @@ for (i in 1:ncol(X.raw))
 X.f <- c()
 X.f.cols <- c()
 line <- 1
-for (form in system("cat snippets/experiments/short-formulas.txt", TRUE)) {
+for (form in sample(system("cat snippets/experiments/formulas.txt", TRUE), 20)) {
   newvar <- eval(parse(text=form))
   if (sum(!is.finite(newvar)) == 0) {
     X.f.cols <- c(X.f.cols, line)
@@ -26,7 +26,7 @@ X.pca_scaled <- scale(data.frame(X.f))
 X.pca_scaled[is.nan(X.pca_scaled)] <- 0
 
 X.pca_x <- data.frame(prcomp(~., data=data.frame(X.pca_scaled), na.action=na.omit)$x)
-X.pca <- X.pca_x[,1:min(50, ncol(X.pca_x))]
+X.pca <- X.pca_x[,1:min(80, ncol(X.pca_x))]
 
 #
 # X-y preparation.

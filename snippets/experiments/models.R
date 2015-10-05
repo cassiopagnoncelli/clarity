@@ -73,7 +73,7 @@ results$randomForest <- list(fit = fit, predicted = predicted)
 library('monmlp')
 
 fit <- monmlp.fit(as.matrix(X_train), as.matrix(y_train),
-                  hidden1=3, n.ensemble=15, monotone=1, bag=TRUE)
+                  hidden1=3, n.ensemble=5, monotone=1, bag=TRUE)
 predicted <- round(monmlp.predict(x=as.matrix(X_test), weights=fit))
 
 results$monmlp <- list(fit = fit, predicted = predicted)
