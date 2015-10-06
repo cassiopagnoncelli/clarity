@@ -12,8 +12,8 @@ sample_test <- setdiff(setdiff(1:x_rows, sample_train), sample_validation)
 
 results <- list()
 
-X <- X.pca
-Xy <- Xy.pca
+X <- X.raw
+Xy <- Xy.raw
 
 X_train <- X[sample_train,]
 y_train <- y[sample_train]
@@ -24,18 +24,18 @@ y_test <- y[sample_test]
 Xy_test <- Xy[sample_test,]
 
 # lm.
-fit <- lm(y ~ ., Xy_train)
-predicted <- round(predict(fit, X_test))
+#fit <- lm(y ~ ., Xy_train)
+#predicted <- round(predict(fit, X_test))
 
-results$lm <- list(fit = fit, predicted = predicted)
+#results$lm <- list(fit = fit, predicted = predicted)
 
 # glm.
-fit <- glm(y ~ ., Xy_train, family=binomial())
-predicted <- round(predict(fit, X_test))
-predicted[predicted < 0] <- 0
-predicted[predicted > 1] <- 1
+#fit <- glm(y ~ ., Xy_train, family=binomial())
+#predicted <- round(predict(fit, X_test))
+#predicted[predicted < 0] <- 0
+#predicted[predicted > 1] <- 1
 
-results$glm <- list(fit = fit, predicted = predicted)
+#results$glm <- list(fit = fit, predicted = predicted)
 
 # e1071 (svm).
 library('e1071')
@@ -73,7 +73,7 @@ results$randomForest <- list(fit = fit, predicted = predicted)
 library('monmlp')
 
 fit <- monmlp.fit(as.matrix(X_train), as.matrix(y_train),
-                  hidden1=3, n.ensemble=5, monotone=1, bag=TRUE)
+                  hidden1=3, n.ensemble=3, monotone=1, bag=TRUE)
 predicted <- round(monmlp.predict(x=as.matrix(X_test), weights=fit))
 
 results$monmlp <- list(fit = fit, predicted = predicted)
@@ -90,20 +90,49 @@ results$knn <- list(fit = fit, predicted = predicted)
 library('ada')
 
 fit <- ada(y ~ ., Xy_train, iter=20)
-predicted <- predict(fit, X_test)
+predicted <- as.vector(predict(fit, X_test))
 #varplot(fit)
 
 results$ada <- list(fit = fit, predicted = predicted)
+
+# mboost.
+library('mboost')
+
+fit <- glmboost(y ~ ., Xy_train, center=T, control=boost_control(mstop=100, nu=0.05))
+predicted <- round(predict(fit, X_test))
+predicted[predicted > 1] <- 1
+predicted[predicted < 0] <- 0
+
+results$mboost <- list(fit = fit, predicted = predicted)
+
+# neuralnet.
+#library('neuralnet')
+
+#fit <- neuralnet(as.formula(paste('y ~', paste(colnames(X_train), collapse='+'))),
+#  data=tbl_df(Xy_train), c(2), stepmax=100)
+#predicted <- round(compute(fit, X_test)$net.result)
+#predicted[predicted > 1] <- 1
+#predicted[predicted < 0] <- 0
+
+#results$neuralnet <- list(fit = fit, predicted = predicted)
 
 # party. (not working)
 # rbm. (incompatible)
 # adabag. (not working: invalid prediction for rpart)
 # RSNNS. (rubbish)
 # deepnet. (rubbish)
+# gbm. (rubbish)
 # MASS: lda, qda. (rubbish)
 
 # caret. (to test)
 # darch. (to test)
-# neuralnet. (to test)
 # depmixS4. (to test)
 # h2o. (to test)
+
+# Predictions matrix.
+predictions <- c()
+for (i in names(results)) {
+  predictions <- cbind(predictions, results[[i]]$predicted)
+}
+
+colnames(predictions) <- names(results)
