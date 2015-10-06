@@ -1,0 +1,253 @@
+---
+title: "Simulation Report"
+author: "Clarity"
+date: "6 October 2015"
+output: html_document
+---
+
+```{r load_vars, echo=F}
+library('knitr')
+
+load('tmp/expert-report.RData')
+```
+
+## Event profiler
+
+```{r event_profiling, echo=F}
+rescaleSequence <- function(s, bottom=0, top=1) {
+  bottom + (top - bottom) * (s - min(s)) / (max(s) - min(s))
+}
+
+past_framesize <- 20
+
+if (past_framesize >= min(orders_history$open_time))
+  past_framesize <- 1
+
+# Summary of events
+# 
+# - entry analysis (average and sd evolution, pre vs post)
+# - exit analysis (optimal neighborhood for exit, business rules for exit)
+# - risk and drawdown analysis (worst case scenarios)
+
+# Entry analysis.
+hold_time <- with(orders_history, { close_time - open_time })
+framesize <- as.integer(quantile(hold_time, 0.75))
+
+post_entry <- apply(orders_history, 1, function(order) {
+  position_timeframe <- order[3]:order[4]
+  instrument_id <- instruments[order[1], 'series_id']
+  quotes <- all_series[position_timeframe, instrument_id]
+  length(quotes) <- framesize
+  quotes
+})
+
+pre_entry <- apply(orders_history, 1, function(o) {
+  col_instr_id <- as.integer(o[1])
+  col_open_time <- as.integer(o[3])
+  position_timeframe <- seq(max(col_open_time - 1, 1),
+                            max(col_open_time - past_framesize, 1),
+                            -1)
+  instrument_id <- instruments[col_instr_id, 'series_id']
+  quotes <- all_series[position_timeframe, instrument_id]
+  length(quotes) <- past_framesize
+  as.double(quotes)
+})
+pre_entry <- pre_entry[nrow(pre_entry):1,]
+
+# Combine pre- and post-entry.
+pre_post_entry <- rbind(pre_entry, post_entry)
+entry <- apply(pre_post_entry, 2, function(s) {
+  s / s[past_framesize + 1]
+})
+entry_summary <- data.frame(mean=apply(entry, 1, mean, na.rm=T),
+                            sd=apply(entry, 1, sd))
+entry_summary <- data.frame(entry_summary,
+                            upper=with(entry_summary, { mean + qnorm(0.95) * sd }),
+                            lower=with(entry_summary, { mean + qnorm(0.05) * sd }),
+                            max=apply(entry, 1, max, na.rm=T),
+                            min=apply(entry, 1, min, na.rm=T),
+                            q90=apply(entry, 1, quantile, 0.90, na.rm=T),
+                            q75=apply(entry, 1, quantile, 0.75, na.rm=T),
+                            q25=apply(entry, 1, quantile, 0.25, na.rm=T),
+                            q10=apply(entry, 1, quantile, 0.10, na.rm=T))
+
+# Plot.
+ylim_sup <- max(mean(entry_summary$upper[!is.na(entry_summary$upper)]),
+                1 + (entry_summary$mean-1) * 1.1)
+ylim_inf <- min(mean(entry_summary$lower[!is.na(entry_summary$lower)]),
+                1 + (entry_summary$mean-1) * 0.9)
+qty_histogram <- rescaleSequence(
+  apply(post_entry[1:nrow(post_entry),], 1, function(x) { sum(!is.na(x)) }),
+  ylim_inf,
+  1
+)
+
+#readline('Press ENTER to go to the next plot ')
+timeframe <- -past_framesize:(framesize-1)
+plot(timeframe, entry_summary$mean, t='l', col='blue', lwd=2,
+     main='Entry positions', xlab='Periods', ylab='Equity',
+     ylim=c(ylim_inf, ylim_sup))
+lines(timeframe, entry_summary$upper, t='l', col='navy', lwd=0.5, lty='dashed')
+lines(timeframe, entry_summary$lower, t='l', col='navy', lwd=0.5, lty='dashed')
+lines(timeframe, entry_summary$max, t='l', col='deepskyblue', lwd=0.9)
+lines(timeframe, entry_summary$min, t='l', col='deepskyblue', lwd=0.9)
+lines(timeframe, entry_summary$q90, t='l', col='deepskyblue', lwd=0.5)
+lines(timeframe, entry_summary$q75, t='l', col='deepskyblue', lwd=0.5)
+lines(timeframe, entry_summary$q25, t='l', col='deepskyblue', lwd=0.5)
+lines(timeframe, entry_summary$q10, t='l', col='deepskyblue', lwd=0.5)
+lines(0:(length(qty_histogram)-1), qty_histogram, t='h', col='salmon')
+abline(v=0, lwd=2, col='gray')
+abline(h=1, lwd=2, col='darkgray', lty='dashed')
+```
+
+## Simulation plots
+
+```{r, echo=FALSE}
+if (nrow(orders_history) == 0)
+  return(TRUE)
+
+geomean <- function(x) {
+  prod(x)^(1/length(x))
+}
+
+kellyCriteria <- function(win_prob, avg_ret) {
+  p <- win_prob
+  b <- 1 + avg_ret
+  
+  (p * (b+1) - 1) / b
+}
+
+# Basic statistics.
+opening_prices <- as.double(apply(orders_history, 1, function(x) {
+  all_series[x[3], instruments[x[1], 'series_id']]
+}))
+
+closing_prices <- as.double(apply(orders_history, 1, function(x) {
+  all_series[x[4], instruments[x[1], 'series_id']]
+}))
+
+hold_time <- orders_history$close_time - orders_history$open_time
+profit <- orders_history$amount * (closing_prices - opening_prices)
+gross_balance <- cumsum(c(equity_curve[1], profit))
+returns <- diff(gross_balance) / head(gross_balance, -1)
+balance <- cumprod(1 +  returns)
+
+winning_trades <- returns[returns > 0]
+losing_trades <- returns[returns <= 0]
+
+win_loss_count   <- c(length(winning_trades), length(losing_trades))
+win_loss_avg     <- c(geomean(1+winning_trades) - 1, geomean(1+losing_trades) - 1)
+win_loss_freq    <- c(length(winning_trades) / length(returns), 
+                      length(losing_trades) / length(returns))
+win_loss_largest <- c(max(winning_trades), min(losing_trades))
+
+expected_ret  <- prod(1 + returns)^(1/length(returns)) - 1
+profit_factor <- sum(profit[profit > 0]) / -sum(profit[profit <= 0])
+sharpe_ratio  <- expected_ret / sd(returns)
+sortino_ratio <- expected_ret / sd(losing_trades)
+
+kelly <- kellyCriteria(win_loss_avg[1], expected_ret)
+
+# Positions summary.
+trades <- data.frame(
+  profit = profit,
+  size = orders_history$amount,
+  hold_time = hold_time,
+  returns = returns,
+  balance = balance)
+
+# Win vs loss summary.
+win_loss <- t(data.frame(
+  average = win_loss_avg,
+  frequency = win_loss_freq,
+  count = win_loss_count,
+  largest = win_loss_largest,
+  row.names=c('Win', 'Loss')))
+
+# Position sizing.
+position_sizing <- data.frame(
+  value=c(sprintf('%.3f', kelly)),
+  row.names=c('kelly'))
+
+# Performance summary.
+performance <- data.frame(
+  expected_return = expected_ret,
+  profit_factor = profit_factor,
+  sharpe = sharpe_ratio,
+  sortino = sortino_ratio,
+  row.names=c('value'))
+
+# Format data frames.
+performance <-
+  data.frame(value=factor(as.character(
+    apply(performance['value',], 2, function(x) {
+      ifelse(is.integer(x),
+             x,
+             sprintf("%.6f", x))
+    })
+  )), row.names=colnames(performance))
+```
+
+```{r echo=F}
+b <- c(1, balance)
+plot(b, t='l', lwd='2', col='blue', ylim=c(0, max(b)),
+     xlab='Trades', ylab='Equity', main='Equity growth')
+lines((1 + expected_ret)^seq(0, length(returns)), t='l', lwd=0.7, col='lightblue')
+abline(h=1, lwd=0.7, col='lightblue')
+```
+
+```{r echo=F}
+hist(returns, breaks=2 * 3.3 * log(length(returns)), probability=T,
+     main='Returns distribution', ylab='Frequency', xlab='Returns')
+lines(density(returns))
+abline(v=0, col='black', lwd=1)
+rug(jitter(returns))
+abline(v=expected_ret, col='black', lwd=2.5)
+```
+
+```{r echo=F}
+boxplot(returns, horizontal=T,
+        main='Win vs Loss positions', xlab='Profit')
+stripchart(returns, method='jitter', add=T, pch=16, at=.7, cex=.7, col='darkgray')
+abline(v=0, col='gray', lwd=1.5)
+abline(v=expected_ret, col='black', lwd=2.5)
+```
+
+## Trades
+
+```{r echo=F}
+kable(ea_return$trades, digits=3)
+```
+
+## Win vs loss
+
+```{r echo=F}
+kable(ea_return$win_loss, digits=3)
+```
+
+## Overall performance
+
+```{r echo=F}
+kable(t(ea_return$performance), digits=3)
+```
+
+## Position sizing
+
+```{r echo=F}
+kable(t(ea_return$position_sizing), digits=3)
+```
+
+## Expert advisor return message
+
+```{r echo=F}
+if (is.null(ea_return$end)) {
+  cat("No message.\n\n")
+} else
+  kable(ea_return$end, digits=3)
+```
+
+## Journal
+
+```{r echo=F}
+kable(ea_return$journal, digits=3)
+```

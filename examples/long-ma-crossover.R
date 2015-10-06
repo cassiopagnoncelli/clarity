@@ -1,11 +1,13 @@
 source('base.R', local=.GlobalEnv)
 
+# Extract-Transform-Load.
 etl <- function() {
   load_instruments('vale', 'p')
   addInstrument('p')
   setDefaultInstrument('p')
 }
 
+# Vector-based preparations, provides full time-series access.
 vectorized <- function() {
   library('TTR')
   
@@ -23,6 +25,9 @@ vectorized <- function() {
   151
 }
 
+#
+# Begin-tick-end loop.
+#
 beginEA <- function() {
 
 }
@@ -43,14 +48,13 @@ endEA <- function() {
 
 }
 
-#
 # Simulation.
-#
 (result <- runExpertAdvisor(etl, vectorized, beginEA, tickEA, endEA,
   list(
     deposit = 10000,
     journaling = TRUE,
-    plot_event_profiler = TRUE,
-    plot_report = TRUE
+    plot_event_profiler = FALSE,
+    plot_report = FALSE,
+    generate_rmd_report = TRUE
   )
 ))

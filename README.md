@@ -98,7 +98,6 @@ Parameter optimisation can be performed using genetic algorithms, simulated anne
 - R mirror at setup
 - migrate graphics to ggplot2
 - plot entry & exit points for every trade
-- report with R markdown
 
 ## Installation
 

@@ -17,3 +17,7 @@ vignettes/*.pdf
 snippets/experiments/show.RData
 snippets/experiments/show.pdf
 snippets/experiments/show.html
+
+# Clarity tmp
+tmp/*
+expert-simulation.html
