@@ -2,6 +2,8 @@ source('global-vars.R', local=.GlobalEnv) # No dependencies
 source('aux-funs.R', local=.GlobalEnv)    # No dependencies
 source('journal.R', local=.GlobalEnv)     # Depends global-vars
 source('instruments-manipulation.R', local=.GlobalEnv)
+source('event-profiler.R', local=.GlobalEnv)
+source('reporting.R', local=.GlobalEnv)
 
 library('compiler')
 
@@ -36,6 +38,10 @@ initializeBackend <- function(settings) {
   assign('journal', data.frame(epoch=c(), level=c(), message=c()), envir=.GlobalEnv)
   
   assign('journaling', settings$journaling, envir=.GlobalEnv)
+  
+  assign('plot_event_profiler', settings$plot_event_profiler, envir=.GlobalEnv)
+  
+  assign('plot_report', settings$plot_report, envir=.GlobalEnv)
 }
 
 accountTickUpdate <- cmpfun(function(update.returns = TRUE) {
@@ -106,5 +112,15 @@ runExpertAdvisor <- function(etl, vectorized, beginEA, tickEA, endEA,
   etl()
   
   end_message <- loopEA(vectorized, beginEA, tickEA, endEA)
-  list(journal=journal, end=end_message)
+  
+  if (plot_event_profiler)
+    runEventProfiler()
+  
+  report <- generateReport(plot_report)
+  
+  ea_return <- list(journal=journal, end=end_message)
+  for (i in names(report))
+    ea_return[[i]] <- report[[i]]
+  
+  ea_return
 }

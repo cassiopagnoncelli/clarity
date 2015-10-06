@@ -46,14 +46,11 @@ endEA <- function() {
 #
 # Simulation.
 #
-runExpertAdvisor(etl, vectorized, beginEA, tickEA, endEA,
+(result <- runExpertAdvisor(etl, vectorized, beginEA, tickEA, endEA,
   list(
-    deposit=10000,
-    journaling=TRUE
+    deposit = 10000,
+    journaling = TRUE,
+    plot_event_profiler = TRUE,
+    plot_report = TRUE
   )
-)
-
-runEventProfiler()
-
-report <- generateReport(FALSE)
-report
+))

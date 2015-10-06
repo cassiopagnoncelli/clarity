@@ -64,7 +64,7 @@ runEventProfiler <- function(past_framesize=20) {   # AMEND: reverse pre-entry
     1
   )
   
-  readline('Press ENTER to go to the next plot ')
+  #readline('Press ENTER to go to the next plot ')
   timeframe <- -past_framesize:(framesize-1)
   plot(timeframe, entry_summary$mean, t='l', col='blue', lwd=2,
        main='Entry positions', xlab='Periods', ylab='Equity',
