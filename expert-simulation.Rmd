@@ -239,7 +239,7 @@ kable(t(ea_return$position_sizing), digits=3)
 
 ## Expert advisor return message
 
-```{r echo=F}
+```{r echo=F, results='asis'}
 if (is.null(ea_return$end)) {
   cat("No message.\n\n")
 } else
