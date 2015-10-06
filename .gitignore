@@ -13,11 +13,9 @@ vignettes/*.html
 vignettes/*.pdf
 .Rproj.user
 
-# Clarity <-> R markdown bridge file
-snippets/experiments/show.RData
-snippets/experiments/show.pdf
-snippets/experiments/show.html
-
 # Clarity tmp
 tmp/*
-expert-simulation.html
+snippets/experiments/show.pdf
+snippets/experiments/show.html
+examples/expert-simulation.html
+examples/expert-simulation.pdf

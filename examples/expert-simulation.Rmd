@@ -8,7 +8,7 @@ output: html_document
 ```{r load_vars, echo=F}
 library('knitr')
 
-load('tmp/expert-report.RData')
+load('../tmp/expert-report.RData')
 ```
 
 ## Event profiler

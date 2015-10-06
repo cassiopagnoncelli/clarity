@@ -1,9 +1,9 @@
-library('fGarch')
-library('TTR')
-source('aux-funs.R')
+source('include/aux-funs.R')
+source('include/symbols.R')
 source('snippets/bdm.R')
 source('snippets/ts-outliers.R')
-source('symbols.R')
+library('fGarch')
+library('TTR')
 
 load_instruments('pomo4_sa', columns=1:6)
 colnames(P) <- c(colnames(P)[-6], 'p')

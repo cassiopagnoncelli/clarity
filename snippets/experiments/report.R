@@ -1,7 +1,7 @@
 source('snippets/experiments/models.R', local=.GlobalEnv)
 
 # Save variables
-save(predictions, y_test, file='snippets/experiments/show.RData')
+save(predictions, y_test, file='tmp/experiment.RData')
 
 # Add macroeconomic variables: 
 #   inflation,

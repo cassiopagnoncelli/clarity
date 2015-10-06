@@ -1,6 +1,6 @@
 ---
-title: "Filtering winning trades apart from losing trades"
-output: pdf_document
+title: "Entry signal filtering"
+output: html_document
 ---
 
 This econometrics experiment provides a financial instrument trading strategy with a
@@ -9,7 +9,7 @@ classifier intended to filter winning trades apart from losing trades.
 ## Best possible ensemble
 
 ```{r echo=FALSE}
-load('show.RData')
+load('../../tmp/experiment.RData')
 
 optimal_prediction <- apply(predictions, 1, function(row) { min(row) != max(row) })
 optimal_prediction_error <- 1 - sum(optimal_prediction) / length(optimal_prediction)

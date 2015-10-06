@@ -1,4 +1,4 @@
-source('db.R', local=.GlobalEnv)
+source('include/db.R', local=.GlobalEnv)
 library('zoo')
 library('xts')
 library('quantmod')

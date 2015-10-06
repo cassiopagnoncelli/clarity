@@ -18,7 +18,7 @@ then
 fi
 
 # R packages download.
-for i in $(grep -R "library(" * | grep -v "libraries.R" | cut -d":" -f 2 | cut -d "'" -f 2)
+for i in $(grep -R "library(" include/* | grep -v "libraries.R" | cut -d":" -f 2 | cut -d "'" -f 2)
 do
   echo $i
   R -q --vanilla <<EOF
@@ -31,9 +31,15 @@ echo "CREATE DATABASE clarity;" | psql
 
 # Symbols downloading.
 echo "Downloading indicators and instruments..."
+cd data-providers
 for i in $(cat quantmod.txt); do sh quantmod-download "$i"; done
 for i in $(cat quandl.txt); do sh quandl-download "$i"; done
+cd ..
+
+# Create temp dir.
+mkdir tmp
 
 # Success.
-echo "Clarity should be up and running now. Start off by running 'example.R' inside your RStudio."
-
+rootdir=$(pwd)
+echo "Clarity should be up and running now. Start off by running any example out of 'examples' dir inside your RStudio."
+echo "Noteworthy, if you plan to use Clarity outside RStudio, please set ${rootdir} as your root dir with setwd();"
