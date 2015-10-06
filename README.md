@@ -91,7 +91,6 @@ Parameter optimisation can be performed using genetic algorithms, simulated anne
 - Append position's return in open\_positions
 - Add kelly criteria in reporting result for multi-asset
 - Portfolio report
-- Rewrite symbols.R
 - Amend FRED meta info: http://stackoverflow.com/questions/24985267/quantmod-fred-metadata-in-r
 - Embed date into journal
 - load\_instruments' trim function
