@@ -71,7 +71,7 @@ Facing either same or opposite directions, an one-axis view over events at diffe
 
 ![Pulse continuous impact aggregator](http://s7.postimg.org/5jw9093nf/pulse_continuous_impact_aggregator.png)
 
-#### Vectorized- and Iterated-based Simulation
+#### Vector- and Iteration-based simulation at same environment
 
 Alike _MetaTrader_, the well known tool for retail traders, __Clarity__ bundles the standard iteration loop `begin()`-`start()`-`end()`, specially useful in HFT, and the traditional vector-based simulation, as in _Matlab_, in one single environment enabling both approaches to be used simultaneously.
 
