@@ -42,8 +42,6 @@ initializeBackend <- function(settings) {
   assign('plot_event_profiler', settings$plot_event_profiler, envir=.GlobalEnv)
   
   assign('plot_report', settings$plot_report, envir=.GlobalEnv)
-  
-  assign('generate_rmd_report', settings$generate_rmd_report, envir=.GlobalEnv)
 }
 
 accountTickUpdate <- cmpfun(function(update.returns = TRUE) {
@@ -117,16 +115,13 @@ runExpertAdvisor <- function(etl, vectorized, beginEA, tickEA, endEA, settings) 
   if (plot_event_profiler)
     runEventProfiler()
   
-  report <- generateReport(plot_report)
+  ea_return <- append(
+    list(journal=journal, end=end_message),
+    generateReport(plot_report))
   
-  ea_return <- list(journal=journal, end=end_message)
-  for (i in names(report))
-    ea_return[[i]] <- report[[i]]
-  
-  if (generate_rmd_report)
-    save(all_series, instruments, journal, open_positions, orders_history,
-         equity_curve, ea_return,
-         file='tmp/expert-report.RData')
+  save(all_series, instruments, journal, open_positions, orders_history,
+       equity_curve, ea_return,
+       file='tmp/expert-report.RData')
   
   ea_return
 }
