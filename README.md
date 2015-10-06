@@ -97,6 +97,7 @@ Parameter optimisation can be performed using genetic algorithms, simulated anne
 - start+end dates into indicators table
 - R mirror at setup
 - migrate graphics to ggplot2
+- plot entry & exit points for every trade
 
 ## Installation
 

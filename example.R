@@ -1,29 +1,26 @@
 source('base.R', local=.GlobalEnv)
 
 etl <- function() {
-  load_instruments('pssa3_sa', 'p')
+  load_instruments('vale', 'p')
   addInstrument('p')
   setDefaultInstrument('p')
 }
 
 vectorized <- function() {
-  n <- nrow(all_series)
+  library('TTR')
   
-  ma5 <- c(rep(0, 4), rollapply(p, 5, mean))
-  ma14 <- c(rep(0, 13), rollapply(p, 14, mean))
-  ma80 <- c(rep(0, 79), rollapply(p, 80, mean))
-  ma5d <- c(0, ma5[-n])
-  ma14d <- c(0, ma14[-n])
+  ema <- EMA(p, 150)
   
-  signal_fast_crossover <- ma5 > ma14 & ma5d < ma14d
-  fast_is_up <- ma14 > ma80
+  p_delay <- Lag(p)
+  ema_delay <- Lag(ema)
+  
+  buy_signal <- p_delay < ema_delay & p > ema_delay
   
   # Globally register only the series to be used.
-  assign('buy_signal', signal_fast_crossover & fast_is_up,
-         envir=.GlobalEnv)
+  assign('buy_signal', buy_signal, envir=.GlobalEnv)
   
   # Return the starting time index.
-  85
+  151
 }
 
 beginEA <- function() {
@@ -31,10 +28,10 @@ beginEA <- function() {
 }
 
 # Available global variables:
-# - holding_time, positions_returns, open_positions.
+# - holding_time, positions_returns, open_positions, equity.
 tickEA <- function() {
   if (nrow(open_positions) > 0) {
-    if (positions_returns[1] < -0.2 || positions_returns[1] > 0.2)
+    if (positions_returns[1] < -0.05 || positions_returns[1] > 1)
       closePosition(1)
   }
   
@@ -56,7 +53,7 @@ runExpertAdvisor(etl, vectorized, beginEA, tickEA, endEA,
   )
 )
 
-#runEventProfiler()
+runEventProfiler()
 
 report <- generateReport(FALSE)
 report
