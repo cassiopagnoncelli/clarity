@@ -9,8 +9,15 @@ addPosition <- function(instrument_id, amount) {
 buy <- function(qty='max', instrument_id='default') {
   instr <- ifelse(instrument_id == 'default', default_instrument_id, instrument_id)
   price <- instrumentSeries(instr, F)
-  amount <- floor(balance / price)
-  amount <- ifelse(qty == 'max', amount, min(amount, max(amount, 0)))
+  
+  if (qty == 'max')              # maximum bearable lot size.
+    amount <- floor(balance / price)
+  else if (qty == 'min')         # minimum lot size.
+    amount <- ifelse(floor(balance / price) > 0, 1, 0)
+  else if (0 < qty && qty < 1)   # proportion of available balance.
+    amount <- floor(qty * balance / price)
+  else                           # fixed lot.
+    amount <- ifelse(qty <= floor(balance / price), qty, 0)
   
   if (amount > 0) {
     addPosition(instr, amount)
@@ -24,7 +31,7 @@ buy <- function(qty='max', instrument_id='default') {
     return(TRUE)
   } else {
     if (journaling)
-      journalWrite(paste('Failed to buy zero units of instrument',
+      journalWrite(paste('Cannot buy zero units of instrument',
                          instr,
                          'at',
                          price),

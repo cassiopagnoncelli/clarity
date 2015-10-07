@@ -1,4 +1,6 @@
 source('include/clarity.R', local=.GlobalEnv)
+source('add-ons/pos_manage_long.R', local=.GlobalEnv)
+library('TTR')
 
 # Extract-Transform-Load.
 etl <- function() {
@@ -9,8 +11,6 @@ etl <- function() {
 
 # Vector-based preparations, provides full time-series access.
 vectorized <- function() {
-  library('TTR')
-  
   ema <- EMA(p, 150)
   
   p_delay <- Lag(p)
@@ -28,24 +28,19 @@ vectorized <- function() {
 #
 # Begin-tick-end loop.
 #
-beginEA <- function() {
-
-}
+beginEA <- function() {}
+endEA <- function() {}
 
 # Available global variables:
 # - holding_time, positions_returns, open_positions, equity.
 tickEA <- function() {
   if (nrow(open_positions) > 0) {
-    if (positions_returns[1] < -0.05 || positions_returns[1] > 1)
+    if (pos_manage_long() > 0)
       closePosition(1)
   }
   
   if (buy_signal[epoch])
-    buy()
-}
-
-endEA <- function() {
-
+    buy(300)
 }
 
 # Simulation.

@@ -35,8 +35,6 @@ generateReport <- function(plot_results = T) {
   sharpe_ratio  <- expected_ret / sd(returns)
   sortino_ratio <- expected_ret / sd(losing_trades)
   
-  kelly <- kellyCriteria(win_loss_avg[1], expected_ret)
-  
   # Positions summary.
   trades <- data.frame(
     profit = profit,
@@ -52,11 +50,6 @@ generateReport <- function(plot_results = T) {
     count = win_loss_count,
     largest = win_loss_largest,
     row.names=c('Win', 'Loss')))
-  
-  # Position sizing.
-  position_sizing <- data.frame(
-    value=c(sprintf('%.3f', kelly)),
-    row.names=c('kelly'))
   
   # Performance summary.
   performance <- data.frame(
@@ -75,6 +68,13 @@ generateReport <- function(plot_results = T) {
                sprintf("%.6f", x))
       })
     )), row.names=colnames(performance))
+  
+  # Optimal position size factor
+  psf <- optim(0.5, function(f) {
+      - prod(1 + f*returns)
+    }, method='L-BFGS-B', lower=0, upper=1e3)
+  psf <- data.frame(factor = psf$par, prospective_balance = -psf$value,
+                    row.names='Prospective position size factor')
   
   # Plots.
   if (plot_results) {
@@ -108,7 +108,6 @@ generateReport <- function(plot_results = T) {
   return(list(
     trades = trades,
     win_loss = win_loss,
-    position_sizing = position_sizing,
     performance = performance
   ))
 }

@@ -110,13 +110,6 @@ geomean <- function(x) {
   prod(x)^(1/length(x))
 }
 
-kellyCriteria <- function(win_prob, avg_ret) {
-  p <- win_prob
-  b <- 1 + avg_ret
-  
-  (p * (b+1) - 1) / b
-}
-
 # Basic statistics.
 opening_prices <- as.double(apply(orders_history, 1, function(x) {
   all_series[x[3], instruments[x[1], 'series_id']]
@@ -146,8 +139,6 @@ profit_factor <- sum(profit[profit > 0]) / -sum(profit[profit <= 0])
 sharpe_ratio  <- expected_ret / sd(returns)
 sortino_ratio <- expected_ret / sd(losing_trades)
 
-kelly <- kellyCriteria(win_loss_avg[1], expected_ret)
-
 # Positions summary.
 trades <- data.frame(
   profit = profit,
@@ -163,11 +154,6 @@ win_loss <- t(data.frame(
   count = win_loss_count,
   largest = win_loss_largest,
   row.names=c('Win', 'Loss')))
-
-# Position sizing.
-position_sizing <- data.frame(
-  value=c(sprintf('%.3f', kelly)),
-  row.names=c('kelly'))
 
 # Performance summary.
 performance <- data.frame(
@@ -222,19 +208,13 @@ kable(ea_return$trades, digits=3)
 ## Win vs loss
 
 ```{r echo=F}
-kable(ea_return$win_loss, digits=3)
+kable(t(ea_return$win_loss), digits=3)
 ```
 
 ## Overall performance
 
 ```{r echo=F}
 kable(t(ea_return$performance), digits=3)
-```
-
-## Position sizing
-
-```{r echo=F}
-kable(t(ea_return$position_sizing), digits=3)
 ```
 
 ## Expert advisor return message
