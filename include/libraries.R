@@ -1,35 +1,36 @@
-## R-views:
-# http://cran.r-project.org/web/views/Finance.html
-# http://cran.r-project.org/web/views/MachineLearning.html
-# http://cran.r-project.org/web/views/Econometrics.html
-# http://cran.r-project.org/web/views/TimeSeries.html
-# http://cran.r-project.org/web/views/Robust.html
+# Database.
+library('DBI')               # Interface to a number of databases
+library('RPostgreSQL')       # Postgres interface via psqlODBC libiodbc-devel iodbc
+library('RSQLite')           # SQLite interface
+library('rredis')            # Redis wrapper
+library('foreign')           # Read Minitab, S, SAS, SPSS, Stata, Weka, etc
 
-## Time series handling
-library('zoo')
-library('xts')
+# Containers and dataset manipulation & maneuvering.
+library('dplyr')             # plyr's next iteration
+library('data.table')        # data.frame extension
+library('zoo')               # Z's ordered observations, including irregular ts
+library('xts')               # Extensible time series
+library('Matrix')            # Sparse and dense matrix classes and methods
 
-## Metrics, performance and risk analysis.
-library('fBasics')
-library('mlbench')
-#library('Rmetrics')
-library('PerformanceAnalytics')
+library('sqldf')             # SQL SELECT on data frames
+library('reshape')           # Melting, reshaping and rescaling
 
-## Finance.
-library('quantmod')
-library('FinancialInstrument')
-library('highfrequency')
-#library('RQuantLib')         # Requires QuantLib (and C++'s Boost libraries)
-library('fAssets')
+# Interfacing.
+library('R.matlab')
 
-## Technical analysis.
-library('TTR')
-#library('candlesticks')
+# Code.
+library('Rcpp')              # C++ interface
+library('compiler')          # Compile R funtions to R bytecode
+library('inline')            # Inline C/C++/Fortran code, JIT fun compilation
+library('parallel')          # Parallel computation
 
-## Portfolio theory.
-library('fPortfolio')
+# Code utilities.
+library('assertthat')        # Assertion
+library('stringr')           # String misc functions
+library('RUnit')             # Unit testing
+library('SOAR')              # Memory management
 
-## Optimization.
+# Optimization.
 library('GenSA')             # Generalized simulated annealing
 library('GA')
 library('pso')
@@ -37,30 +38,43 @@ library('quadprog')          # Quadratic optimization.
 library('Rglpk')             # Linear programming, requires glpk glpk-devel libglpk36
 library('Rsymphony')         # Mixed integer LP, requires Symphony lib and Rglpk
 
-## Code performance.
-library('Rcpp')              # C++ interface
-library('compiler')
-library('inline')
-library('parallel')
+# Formulas handling.
+library('formula.tools')
 
-# Database.
-library('DBI')
-library('RPostgreSQL')       # Postgres interface via psqlODBC libiodbc-devel iodbc
-library('rredis')            # Redis wrapper
-#library('RNetCDF')           # NetCDF's array storage-optimized structure
-library('foreign')           # Read Minitab, S, SAS, SPSS, Stata, Weka, etc
+# Plot.
+library('ggplot2')
+library('ggvis')
+library('corrgram')
+library('psych')             # Spider chart
 
-# Interfacing.
-library('R.matlab')
+#
+# Finance and Modeling.
+#
+# http://cran.r-project.org/web/views/Finance.html
+# http://cran.r-project.org/web/views/MachineLearning.html
+# http://cran.r-project.org/web/views/Econometrics.html
+# http://cran.r-project.org/web/views/TimeSeries.html
+# http://cran.r-project.org/web/views/Robust.html
 
-# Dataset manipulation and maneuvering.
-library('reshape')
-library('dplyr')             # plyr's next iteration.
-#library('rescaler')
+# Metrics, performance and risk analysis.
+library('fBasics')
+library('PerformanceAnalytics')
 
-#library('sqldf')
+# Technical analysis.
+library('TTR')                # Technical analysis indicators (eg. EMA)
+#library('candlesticks')
 
-## Time series modeling.
+# Portfolio theory.
+library('fPortfolio')
+
+# Finance.
+library('quantmod')
+library('FinancialInstrument')
+library('highfrequency')
+library('fAssets')
+#library('RQuantLib')         # Requires QuantLib (and C++'s Boost libraries)
+
+# Time series modeling.
 library('TSA')
 library('tseries')
 library('timeSeries')
@@ -68,8 +82,8 @@ library('timeSeries')
 library('fracdiff')          # ARFIMA
 library('arfima')
 
-library('ftsa')
-library('fts')
+library('ftsa')              # Simple ts tools
+library('fts')               # Interface to tslib (a time series lib in C++)
 
 library('rugarch')
 library('ccgarch')
@@ -86,74 +100,16 @@ library('seewave')           # SAX for ts, requires fftw3 and libsndfile libs
 library('quantspec')         # Quantile-based spectral ts analysis
 library('quantreg')          # Condition quantiles methods
 
-## Physics-Chemistry modeling.
+# Physics-Chemistry modeling.
 library('fractal')
 library('tseriesChaos')      # Analysis of nonlinear ts via chaos
 library('fractaldim')
 
 library('quantchem')         # Quantitative chemical analysis
 
-## Machine learning and dynamic models.
-library('h2o')
+library('tau')               # ??? (for automated text mining??)
 
-library('forecast')
-
-library('arules')
-library('arulesViz')
-
-library('sm')                # Smoothing
-
-library('nnet')
-library('neuralnet')
-library('RSNNS')
-library('darch')             # Deep learning
-library('deepnet')           # Deep learning
-
-library('kohonen')           # SOM
-library('som')
-
-library('cluster')
-library('wskm')              # Weighted K-means
-library('mclust')
-
-library('e1071')             # SVM
-
-library('rpart')             # D-tree and random forest
-library('randomForest')
-library('Cubist')            # Quinlan's C5.0 and Cubist
-library('frbs')              # Fuzzy rule-based systems
-library('quantregForest')    # Quantile regression forest
-
-library('wavelets')
-library('wmtsa')             # Wavelet methods for ts analysis
-
-#library('CausalImpact')     # Anomaly detection
-#devtools::install_github("twitter/BreakoutDetection")
-library('changepoint')
-
-library('pomp')              # Particle filter, improved Kalman filter
-#library('KFAS')             # fast Kalman filter
-library('FKF')               # Kalman filter
-library('dse')               # Kalman
-library('dlm')               # Dynamic linear models
-library('dynlm')             # Dynamic linear models
-library('mFilter')           # Several filters
-
-library('depmixS4')          # HMM regime switching
-library('MSwM')              # Markov switching models
-
-library('locfit')            # Local regression, likelihood and density estimation
-
-library('nlme')              # Linear and nonlinear mixed effects models
-
-library('sapa')              # Spectral anaylsis for physical applications
-
-## Statistical modeling.
-library('rebmix')            # Continuous and discrete mixture models
-
-library('TraMineR')          # Sequence analysis
-
-## Statistical methods.
+# Statistical methods.
 library('MASS')
 
 library('kernlab')
@@ -178,15 +134,73 @@ library('symbolicDA')        # Analysis of symbolic data
 
 library('latentnet')         # Latent position and cluster models for networks
 
-## Utils.
-library('formula.tools')
+library('lme4')              # Linear Mixed-Effects Models
+library('nlme')              # Nonlinear Mixed-Effects Models
+library('rebmix')            # Bayesian Finite Mixture Models
 
-library('assertthat')
+library('TraMineR')          # Sequence analysis
 
-library('RUnit')             # Unit testing
+# Machine learning and dynamic models.
+library('h2o')
+library('caret')             # General machine learning tools and models
 
-## Plot.
-library('ggplot2')
-library('ggvis')
-library('corrgram')
-library('psych')             # Spider chart
+library('forecast')
+
+library('arules')
+library('arulesViz')
+
+library('ada')
+library('adabag')
+
+library('glmnet')            # Generalized Linear Models (lasso and elastic net)
+
+library('sm')                # Smoothing
+library('mgcv')              # Mixed GAM computation, smoothness estimation
+
+library('kknn')
+
+library('nnet')
+library('neuralnet')
+library('RSNNS')
+library('darch')             # Deep learning (poor)
+library('deepnet')           # Deep learning (poor)
+
+library('kohonen')           # SOM
+library('som')               # poor SOM
+
+library('cluster')
+library('wskm')              # Weighted K-means
+library('mclust')
+
+library('e1071')             # SVM
+
+library('rpart')             # D-tree and random forest
+library('randomForest')
+library('Cubist')            # Quinlan's C5.0 and Cubist
+library('frbs')              # Fuzzy rule-based systems
+library('quantregForest')    # Quantile regression forest
+library('gbm')               # Gradient boosted trees
+
+library('wavelets')
+library('wmtsa')             # Wavelet methods for ts analysis
+
+library('CausalImpact')     # Anomaly/breakout detection
+#devtools::install_github("twitter/BreakoutDetection")
+library('changepoint')
+
+library('pomp')              # Particle filter, improved Kalman filter
+#library('KFAS')             # fast Kalman filter
+library('FKF')               # Kalman filter
+library('dse')               # Kalman
+library('dlm')               # Dynamic linear models
+library('dynlm')             # Dynamic linear models
+library('mFilter')           # Several filters
+
+library('depmixS4')          # HMM regime switching
+library('MSwM')              # Markov switching models
+
+library('locfit')            # Local regression, likelihood and density estimation
+
+library('nlme')              # Linear and nonlinear mixed effects models
+
+library('sapa')              # Spectral anaylsis for physical applications
