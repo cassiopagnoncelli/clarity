@@ -43,3 +43,4 @@ mkdir tmp
 rootdir=$(pwd)
 echo "Clarity should be up and running now. Start off by running any example out of 'examples' dir inside your RStudio."
 echo "Noteworthy, if you plan to use Clarity outside RStudio, please set ${rootdir} as your root dir with setwd();"
+
