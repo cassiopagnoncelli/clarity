@@ -6,6 +6,9 @@ output: html_document
 ---
 
 ```{r load_vars, echo=F}
+
+# rsjonio, jsonlite, shiny, xtable
+
 library('knitr')
 
 load('../tmp/expert-report.RData')

@@ -1,8 +1,13 @@
+# Available global variables:
+# - holding_time
+# - positions_returns
+# - open_positions
+# - equity
+# - balance
+# - equity_curve
+# - orders_history
+
 generateReport <- function(plot_results = T) {
-  #
-  # TODO: kelly, MAE/MAF
-  #
-  
   if (nrow(orders_history) == 0)
     return(TRUE)
   

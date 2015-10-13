@@ -86,10 +86,3 @@ closePosition <- function(op_row = 1) {
   
   TRUE
 }
-
-positionEvolution <- function(position_id) {
-  i <- open_positions[position_id,]
-  
-  all_series[i$epoch:epoch, i$instrument] /
-    all_series[i$epoch, i$instrument] - 1
-}

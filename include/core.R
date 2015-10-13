@@ -1,5 +1,5 @@
 source('include/global-vars.R', local=.GlobalEnv) # No dependencies
-source('include/aux-funs.R', local=.GlobalEnv)    # No dependencies
+source('include/helpers.R', local=.GlobalEnv)    # No dependencies
 source('include/journal.R', local=.GlobalEnv)     # Depends global-vars
 source('include/instruments-manipulation.R', local=.GlobalEnv)
 source('include/event-profiler.R', local=.GlobalEnv)

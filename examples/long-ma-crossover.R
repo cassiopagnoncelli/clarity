@@ -4,7 +4,7 @@ library('TTR')
 
 # Extract-Transform-Load.
 etl <- function() {
-  load_instruments('vale', 'p')
+  load_instruments('ogxp3_sa', 'p')
   addInstrument('p')
   setDefaultInstrument('p')
 }
@@ -32,7 +32,14 @@ beginEA <- function() {}
 endEA <- function() {}
 
 # Available global variables:
-# - holding_time, positions_returns, open_positions, equity.
+# - holding_time
+# - positions_returns
+# - open_positions
+# - equity
+# - balance
+# - equity_curve
+# - orders_history
+#
 tickEA <- function() {
   if (nrow(open_positions) > 0) {
     if (pos_manage_long() > 0)
