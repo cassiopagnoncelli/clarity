@@ -47,7 +47,7 @@ tickEA <- function() {
   }
   
   if (buy_signal[epoch])
-    buy(300)
+    buy(0.5)
 }
 
 # Simulation.

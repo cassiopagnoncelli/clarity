@@ -1,7 +1,8 @@
 source('include/global-vars.R', local=.GlobalEnv) # No dependencies
-source('include/helpers.R', local=.GlobalEnv)    # No dependencies
+source('include/helpers.R', local=.GlobalEnv)     # No dependencies
 source('include/journal.R', local=.GlobalEnv)     # Depends global-vars
 source('include/instruments-manipulation.R', local=.GlobalEnv)
+source('include/orders-positions.R', local=.GlobalEnv)  # Order & pos management.
 source('include/event-profiler.R', local=.GlobalEnv)
 source('include/reporting.R', local=.GlobalEnv)
 
@@ -101,9 +102,6 @@ stopEA <- function() {
   cat('Stopping EA now...')
   assign('stopped', TRUE, envir=.GlobalEnv)
 }
-
-# Order and position management.
-source('include/orders-positions.R', local=.GlobalEnv)
 
 # Expert advisor.
 runExpertAdvisor <- function(etl, vectorized, beginEA, tickEA, endEA, settings) {
