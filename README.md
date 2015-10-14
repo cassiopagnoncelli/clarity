@@ -92,12 +92,12 @@ Parameter optimisation can be performed using genetic algorithms, simulated anne
 - Add kelly criteria in reporting result for multi-asset
 - Portfolio report
 - Amend FRED meta info: http://stackoverflow.com/questions/24985267/quantmod-fred-metadata-in-r
-- Embed date into journal
 - load\_instruments' trim function
 - start+end dates into indicators table
 - R mirror at setup
 - migrate graphics to ggplot2
 - plot entry & exit points for every trade
+- stacked balance + floating to equity curve into reports
 
 ## Installation
 
