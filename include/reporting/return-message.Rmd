@@ -1,0 +1,8 @@
+## Expert advisor return message
+
+```{r echo=F, results='asis'}
+if (is.null(end_message)) {
+  cat("No message.\n\n")
+} else
+  kable(end_message, digits=3)
+```

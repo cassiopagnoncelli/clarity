@@ -1,0 +1,5 @@
+## Trades
+
+```{r echo=F}
+kable(trades, digits=3)
+```

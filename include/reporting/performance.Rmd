@@ -1,0 +1,5 @@
+## Overall performance
+
+```{r echo=F}
+kable(performance, digits=3)
+```

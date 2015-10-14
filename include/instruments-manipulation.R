@@ -4,13 +4,10 @@ addInstrument <- function(name, series_id = 1, set_default = TRUE) {
   column_to_insert <- ifelse(is.null(ncol(all_series)), 1, ncol(all_series) + 1)
   
   assign('instruments',
-         rbind(instruments, data.frame(name=name,
-                                       series_id=column_to_insert)),
-         envir=.GlobalEnv)
+    rbind(instruments, data.frame(name=name, series_id=column_to_insert)),
+    envir=.GlobalEnv)
   
-  assign('all_series',
-         cbind(all_series, get(name)[,series_id]),
-         envir=.GlobalEnv)
+  assign('all_series',cbind(all_series, get(name)[,series_id]), envir=.GlobalEnv)
   
   if (set_default) {
     #if (set_ohlc) {
@@ -52,5 +49,5 @@ ask <- function(instrument_id='default') {
 }
 
 bid <- function(instrument_id='default') {
-  instrumentSeries(instrument_id, F) - 0.02
+  instrumentSeries(instrument_id, F)
 }

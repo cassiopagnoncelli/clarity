@@ -17,5 +17,4 @@ vignettes/*.pdf
 tmp/*
 snippets/experiments/show.pdf
 snippets/experiments/show.html
-examples/expert-simulation.html
-examples/expert-simulation.pdf
+include/reporting/strategy-report.html

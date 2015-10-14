@@ -1,0 +1,7 @@
+```{r echo=F}
+b <- c(1, balance)
+plot(b, t='l', lwd='2', col='blue', ylim=c(0, max(b)),
+     xlab='Trades', ylab='Equity', main='Equity growth')
+#lines((1 + expected_ret)^seq(0, length(returns)), t='l', lwd=0.7, col='lightblue')
+abline(h=1, lwd=0.7, col='lightblue')
+```

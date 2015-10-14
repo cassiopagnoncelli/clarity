@@ -1,0 +1,5 @@
+## Win vs loss
+
+```{r echo=F}
+kable(win_loss, digits=3)
+```

@@ -1,0 +1,35 @@
+---
+title: "Strategy Execution"
+author: "Clarity"
+output: html_document
+---
+
+```{r load_vars, echo=F}
+library('knitr')
+
+load('../../tmp/expert-report.RData')
+```
+
+```{r child = 'event-profiler.Rmd'}
+```
+
+```{r child = 'performance.Rmd'}
+```
+
+```{r child = 'win-loss.Rmd'}
+```
+
+```{r child = 'return-message.Rmd'}
+```
+
+```{r child = 'equity-evolution.Rmd'}
+```
+
+```{r child = 'returns-distribution.Rmd'}
+```
+
+```{r child = 'trades.Rmd'}
+```
+
+```{r child = 'journal.Rmd'}
+```

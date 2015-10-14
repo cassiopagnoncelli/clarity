@@ -1,43 +1,40 @@
-addPosition <- function(instrument_id, amount) {
+addPosition <- function(instrument_id, amount, type) {
   assign('open_positions',
          rbind(open_positions, data.frame(instrument_id=instrument_id,
+                                          type=type,
                                           amount=amount,
                                           epoch=epoch)),
          envir=.GlobalEnv)
 }
 
-buy <- function(qty='max', instrument_id='default') {
-  instr <- ifelse(instrument_id == 'default', default_instrument_id, instrument_id)
+long <- function(qty='max', instrument_id='default') {
+  instr <- ifelse(instrument_id=='default', default_instrument_id, instrument_id)
+  instr_name <- as.character(instruments[instr, 'name'])
   price <- instrumentSeries(instr, F)
   
   if (qty == 'max')              # maximum bearable lot size.
-    amount <- floor(balance / price)
+    amount <- floor(balance_now / price)
   else if (qty == 'min')         # minimum lot size.
-    amount <- ifelse(floor(balance / price) > 0, 1, 0)
+    amount <- ifelse(floor(balance_now / price) > 0, 1, 0)
   else if (0 < qty && qty < 1)   # proportion of available balance.
-    amount <- floor(qty * balance / price)
+    amount <- floor(qty * balance_now / price)
   else                           # fixed lot.
-    amount <- ifelse(qty <= floor(balance / price), qty, 0)
+    amount <- ifelse(qty <= floor(balance_now / price), qty, 0)
   
   if (amount > 0) {
-    addPosition(instr, amount)
-    assign('balance', balance - amount * price, envir=.GlobalEnv)
+    addPosition(instr, amount, 'L')
+    assign('balance_now', balance_now - amount * price, envir=.GlobalEnv)
     assign('had_deal', TRUE, envir=.GlobalEnv)
     
     if (journaling)
-      journalWrite(paste('Buy', amount, 'of instrument', instr, 'at', price),
-                   level='order')
-    
+      journalWrite(paste('Long', amount, 'of', instr_name, 'at', price), 'order')
+
     return(TRUE)
-  } else {
-    if (journaling)
-      journalWrite(paste('Cannot buy zero units of instrument',
-                         instr,
-                         'at',
-                         price),
-                   level='warning')
   }
   
+  if (journaling)
+    journalWrite(paste('Invalid order:', instr_name, 'at', price), 'warning')
+
   return(FALSE)
 }
 
@@ -47,7 +44,7 @@ closeAllPositions <- function() {
                  level='order')
   
   for (p in 1:nrow(open_positions))
-    closePosition(p)
+    closePosition()
 }
 
 closePosition <- function(op_row = 1) {
@@ -65,18 +62,20 @@ closePosition <- function(op_row = 1) {
                        paste(open_positions$epoch[op_row], epoch, sep='-')),
                  level='order')
   
-  assign('orders_history',
-         rbind(orders_history,
+  assign('positions_history',
+         rbind(positions_history,
                data.frame(instrument_id=open_positions$instrument_id[op_row],
+                          type=open_positions$type[op_row],
                           amount=open_positions$amount[op_row],
                           open_time=open_positions$epoch[op_row],
                           close_time=epoch)),
          envir=.GlobalEnv)
   
-  assign('balance',
-         balance + open_positions$amount[op_row] * 
-           bid(open_positions$instrument_id[op_row]),
-         envir=.GlobalEnv)
+  position_money <- open_positions$amount[op_row] * 
+    bid(open_positions$instrument_id[op_row])
+  
+  assign('balance_now', balance_now + position_money, envir=.GlobalEnv)
+  assign('floating_now', floating_now - position_money, envir=.GlobalEnv)
   
   assign('open_positions',
          open_positions[1:nrow(open_positions) != op_row,],

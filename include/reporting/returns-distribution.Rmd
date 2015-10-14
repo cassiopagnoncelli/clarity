@@ -1,0 +1,17 @@
+```{r echo=F}
+returns <- unitary_returns
+hist(returns, breaks=2 * 3.3 * log(length(returns)), probability=T,
+     main='Returns distribution', ylab='Frequency', xlab='Returns')
+lines(density(returns))
+abline(v=0, col='black', lwd=1)
+rug(jitter(returns))
+#abline(v=expected_ret, col='black', lwd=2.5)
+```
+
+```{r echo=F}
+boxplot(returns, horizontal=T,
+        main='Win vs Loss positions', xlab='Profit')
+stripchart(returns, method='jitter', add=T, pch=16, at=.7, cex=.7, col='darkgray')
+abline(v=0, col='gray', lwd=1.5)
+#abline(v=expected_ret, col='black', lwd=2.5)
+```

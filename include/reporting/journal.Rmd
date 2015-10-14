@@ -1,0 +1,5 @@
+## Journal
+
+```{r echo=F}
+kable(journal, digits=3)
+```

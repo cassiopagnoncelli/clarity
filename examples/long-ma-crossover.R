@@ -4,14 +4,13 @@ library('TTR')
 
 # Extract-Transform-Load.
 etl <- function() {
-  load_instruments('ogxp3_sa', 'p')
+  load_instruments('abcb4_sa', 'p')
   addInstrument('p')
-  setDefaultInstrument('p')
 }
 
 # Vector-based preparations, provides full time-series access.
 vectorized <- function() {
-  ema <- EMA(p, 150)
+  ema <- EMA(p, 50)
   
   p_delay <- Lag(p)
   ema_delay <- Lag(ema)
@@ -22,7 +21,7 @@ vectorized <- function() {
   assign('buy_signal', buy_signal, envir=.GlobalEnv)
   
   # Return the starting time index.
-  151
+  100
 }
 
 #
@@ -32,13 +31,13 @@ beginEA <- function() {}
 endEA <- function() {}
 
 # Available global variables:
+#
 # - holding_time
 # - positions_returns
 # - open_positions
 # - equity
 # - balance
-# - equity_curve
-# - orders_history
+# - positions_history
 #
 tickEA <- function() {
   if (nrow(open_positions) > 0) {
@@ -47,7 +46,7 @@ tickEA <- function() {
   }
   
   if (buy_signal[epoch])
-    buy(0.5)
+    long(0.3)
 }
 
 # Simulation.
@@ -55,7 +54,6 @@ tickEA <- function() {
   list(
     deposit = 10000,
     journaling = TRUE,
-    plot_event_profiler = FALSE,
-    plot_report = FALSE
+    plot_event_profiler = FALSE
   )
 ))
