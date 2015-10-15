@@ -1,0 +1,83 @@
+COMPILAÇÃO
+----------
+
+  Use a ferramenta make para compilar. Uma chamada de make, sem parâmetros,
+  
+    $ make
+
+  gera o executável `arbitragem'. Para removê-lo, use a regra clean:
+
+    $ make clean
+
+
+USO
+---
+
+  O executável `arbitragem' (tanto sequencial quanto paralelo) requer um único
+  parâmetro: o caminho para um arquivo contendo um dígrafo representado por sua
+  matriz de adjacências sem os elementos da diagonal principal. O formato é o
+  seguinte
+
+  grafo_exemplo
+  +-----------------------------------------------------+
+  | numero_de_vertices                                  |
+  | x_1_2     x_1_3     x_1_4     ...     x_1_(n-1)     | /* sem o elemento x_1_1 */
+  | x_2_1     x_2_3     x_2_4     ...     x_2_(n-1)     | /* sem o elemento x_2_2 */
+  | x_3_1     x_3_2     x_3_4     ...     x_3_(n-1)     | /* sem o elemento x_3_3 */
+  | ...                           ...                   |
+  | x_(n-1)_1 x_(n-1)_2 x_(n-1)_3 ...     x_(n-2)_(n-1) | /* sem o elemento x_(n-1)_(n-1) */
+  | x_n_1     x_n_2     x_n_3     ...     x_n_(n-1)     | /* sem o elemento x_n_n */
+  +-----------------------------------------------------+
+
+  onde
+    `numero_de_vertices' é um inteiro positivo
+    `n' é um inteiro maior ou igual a 2 (o grafo deve ter pelo menos dois
+      vértices para haver arbitragem, que é a arbitragem trivial.)
+    `x_i_j' (1 <= i, j <= n e i != j) é um número real positivo
+      satisfazendo  x_i_j = 1/x_j_i.
+
+  A chamada deve ser feita assim
+
+    $ ./arbitragem ../in/grafo_exemplo
+
+  supondo que `arbitragem' se encontra no diretório corrente e o grafo_exemplo
+  se encontra em `../in'.
+  
+  Alguns exemplos estão no diretório "in" (extraídos de uma corretora ainda
+  nesse mês). Há também um gerador automático de exemplos aleatórios (requer a
+  linguagem R), em `in/gerar_grafo' (um script em bash). Basta executar
+
+    $ ./gerar_grafo
+
+  que será gerado um exemplo de nome `grafo_aleatorio', exemplo de um grafo
+  gerado aleatoriamente. Para configurar o número de vértices, média e desvio
+  padrão do exemplo gerado, abra o referido script bash e, nas primeiras
+  linhas, estão as opções de configuração.
+
+
+INSTÂNCIA E RESPOSTA DO PROGRAMA
+--------------------------------
+
+  O programa tem como instância um dígrafo completo de pelo menos 2 vértices
+  satisfazendo peso(src,dst) = 1/peso(dst,src), exatamente conforme a
+  representação descrita no item anterior.
+
+  A resposta do programa é uma matriz quadrada cuja dimensão é a quantidade de
+  vértices do grafo. Cada elemento indexado por (src, dst) nessa matriz é um
+  caminho no grafo com seu respectivo custo (é o caminho de menor custo entre
+  `src' e `dst'). (O custo do caminho é o produto dos pesos de todas as arestas
+  do caminho.) Como resposta, os elementos dessa matriz são listados um por
+  linha, uma forma razoável e minimal de representar a resposta do problema.
+
+  Uma descrição muito melhor é dada no relatório, onde são apresentados o
+  problema e o algoritmo, a análise de complexidade do algoritmo em termos de
+  tempo e espaço e o ganho de desempenho segundo o fator `p' (número de
+  processadores) em termos de tempo de execução na sua implementação.
+
+
+ALUNOS
+------
+
+  Cássio Jandir Pagnoncelli, cjp07  (em) inf.ufpr.br
+  Gabriel Augusto Sobral,    gags07 (em) inf.ufpr.br
+
