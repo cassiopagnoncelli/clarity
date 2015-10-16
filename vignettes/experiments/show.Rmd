@@ -1,0 +1,95 @@
+---
+title: "Entry signal filtering"
+output: html_document
+---
+
+This econometrics experiment provides a financial instrument trading strategy with a
+classifier intended to filter winning trades apart from losing trades.
+
+## Best possible ensemble
+
+```{r echo=FALSE}
+load('../../tmp/experiment.RData')
+
+optimal_prediction <- apply(predictions, 1, function(row) { min(row) != max(row) })
+optimal_prediction_error <- 1 - sum(optimal_prediction) / length(optimal_prediction)
+ensemble_error <- paste(format(100 * optimal_prediction_error, digits=3), '%', sep='')
+```
+
+In an optimal world where a perfect ensemble extracts the right answer provided
+any classifier guesses the proper class correctly, its error rate would be
+```{r echo=F, results='asis'}
+cat(ensemble_error)
+```
+
+Actual votes are distributed as per the histogram below for each class.
+For instance, the third bar on the left plot accounts for
+
+* correct classification rate (as a percentage between 0.00 and 1.00) whenever
+exactly any `2` classifiers agree voting for class `0`
+
+* the number between parenthesis indicates how many times this event occurs
+
+```{r echo=F}
+agrees_0 <- sapply(1:length(y_test), function(i) { sum(predictions[i,] == 0) })
+table_agrees_0 <- table(agrees_0)
+vector_agrees_0 <- as.vector(table_agrees_0)
+height_agrees_0 <- 1.1 * max(vector_agrees_0)
+y_pos_agrees_0 <- 60
+bp <- barplot(table_agrees_0, col='gray', xlab='Class 0', ylim=c(0, height_agrees_0))
+text(x=bp, y=y_pos_agrees_0, label=sapply(1:length(table_agrees_0), function(i) {
+  mean_fmt <- ifelse(length(which(agrees_0 == i)) > 0,
+    format(mean(as.integer(y_test[which(agrees_0 == i)])), digits=3), '')
+  paste(mean_fmt, '\n(', sum(agrees_0 == i), ')', sep='')
+}))
+
+cat('\n\n')
+
+agrees_1 <- sapply(1:length(y_test), function(i) { sum(predictions[i,] == 1) })
+table_agrees_1 <- table(agrees_1)
+vector_agrees_1 <- as.vector(table_agrees_1)
+height_agrees_1 <- 1.1 * max(vector_agrees_1)
+y_pos_agrees_1 <- 60
+bp <- barplot(table_agrees_1, col='gray', xlab='Class 1', ylim=c(0, height_agrees_1))
+text(x=bp, y=y_pos_agrees_1, label=sapply(1:length(table_agrees_1), function(i) {
+  mean_fmt <- ifelse(length(which(agrees_1 == i)) > 0,
+                     format(mean(as.integer(y_test[which(agrees_1 == i)])), digits=3),
+                     '')
+  paste(mean_fmt, '\n(', sum(agrees_1 == i), ')', sep='')
+}))
+```
+
+## Classifiers
+
+```{r pre_loop, echo=F, results='hide', warning=FALSE, message=FALSE}
+library('ROCR', verbose=F, quietly=F)
+```
+
+```{r loop_results, echo=F, results='asis'}
+for (i in colnames(predictions)) {
+  result <- data.frame(pred=predictions[,i], true=y_test)
+  roc_pred <- prediction(as.integer(result$pred), as.integer(result$true))
+  
+  cat(paste("\n\n### ", i, "\n\n", sep=''))
+  
+  cat(paste("Error rate: ",
+            format(100 * (1 - sum(result$pred == result$true) / nrow(result)), digits=4),
+            "%.\n", sep=''))
+  
+  cat(paste("As for ROC below, the area under the curve amounts to ",
+            format(100 * performance(roc_pred, 'auc')@y.values[[1]], digits=4),
+            "%.\n\n", sep=''))
+  
+  plot(performance(roc_pred, 'tpr', 'fpr'))
+}
+```
+
+## Confusion matrices
+
+```{r loop_confusion_matrices, echo=F, results='hold'}
+for (i in colnames(predictions)) {
+  cat(paste(i, '\n'))
+  print(table(data.frame(pred=predictions[,i], true=y_test)))
+  cat('\n')
+}
+```

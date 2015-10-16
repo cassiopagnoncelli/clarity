@@ -1,0 +1,20 @@
+COMPILAÇÃO DE ARQUIVOS
+----------------------
+
+  A compilação desse documento pode ser feita com a ferramente GNU Make (usando
+  o arquivo "./Makefile").
+
+  Uma chamada de <make> sem parâmetros é equivalente a uma chamada com a regra
+  `default', que gera o documento "relatorio" no formato dvi, além de
+  alguns arquivos temporários. Para gerar o documento em algum formato
+  específico, use uma das chamadas correspondentes:
+
+    $ make dvi
+    $ make pdf
+    $ make djvu          # também gera o pdf
+    $ make ps            # também gera o dvi
+
+  Para remover todos os arquivos gerados na compilação, incluindo os documentos
+  em dvi, ps, djvu e/ou pdf, basta usar a regra `clean':
+
+    $ make clean
