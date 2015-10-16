@@ -15,6 +15,6 @@ vignettes/*.pdf
 
 # Clarity tmp
 tmp/*
-snippets/experiments/show.pdf
-snippets/experiments/show.html
+vignettes/experiments/show.pdf
+vignettes/experiments/show.html
 include/reporting/strategy-report.html

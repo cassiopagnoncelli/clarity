@@ -1,4 +1,4 @@
-source('snippets/experiments/models.R', local=.GlobalEnv)
+source('vignettes/experiments/models.R', local=.GlobalEnv)
 
 # Save variables
 save(predictions, y_test, file='tmp/experiment.RData')

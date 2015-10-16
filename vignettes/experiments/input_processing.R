@@ -1,4 +1,4 @@
-source('snippets/experiments/features.R', local=.GlobalEnv)
+source('vignettes/experiments/features.R', local=.GlobalEnv)
 options(warn = 0)
 
 # Formulas over X.
@@ -8,7 +8,7 @@ for (i in 1:ncol(X.raw))
 X.f <- c()
 X.f.cols <- c()
 line <- 1
-for (form in sample(system("cat snippets/experiments/formulas.txt", TRUE), 20)) {
+for (form in sample(system("cat vignettes/experiments/formulas.txt", TRUE), 20)) {
   newvar <- eval(parse(text=form))
   if (sum(!is.finite(newvar)) == 0) {
     X.f.cols <- c(X.f.cols, line)

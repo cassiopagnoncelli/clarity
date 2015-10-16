@@ -1,4 +1,4 @@
-source('snippets/experiments/input_processing.R', local=.GlobalEnv)
+source('vignettes/experiments/input_processing.R', local=.GlobalEnv)
 
 # Dataset separation.
 sample_train <- Filter(function(z) { z < 1000 }, sample(1:x_rows, round(0.85 * x_rows)))
@@ -70,13 +70,13 @@ predicted <- as.integer(predict(fit, X_test)) - 1
 results$randomForest <- list(fit = fit, predicted = predicted)
 
 # monmlp.
-library('monmlp')
+#library('monmlp')
 
-fit <- monmlp.fit(as.matrix(X_train), as.matrix(y_train),
-                  hidden1=3, n.ensemble=3, monotone=1, bag=TRUE)
-predicted <- round(monmlp.predict(x=as.matrix(X_test), weights=fit))
+#fit <- monmlp.fit(as.matrix(X_train), as.matrix(y_train),
+#                  hidden1=3, n.ensemble=3, monotone=1, bag=TRUE)
+#predicted <- round(monmlp.predict(x=as.matrix(X_test), weights=fit))
 
-results$monmlp <- list(fit = fit, predicted = predicted)
+#results$monmlp <- list(fit = fit, predicted = predicted)
 
 # kknn.
 library('kknn')

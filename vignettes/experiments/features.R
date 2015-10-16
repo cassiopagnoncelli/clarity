@@ -1,7 +1,7 @@
-source('include/aux-funs.R')
+source('include/helpers.R')
 source('include/symbols.R')
-source('snippets/bdm.R')
-source('snippets/ts-outliers.R')
+source('vignettes/bdm.R')
+source('vignettes/ts-outliers.R')
 library('fGarch')
 library('TTR')
 
