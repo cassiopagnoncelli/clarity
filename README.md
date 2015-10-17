@@ -98,6 +98,7 @@ Parameter optimisation can be performed using genetic algorithms, simulated anne
 - migrate graphics to ggplot2
 - plot entry & exit points for every trade
 - stacked balance + floating to equity curve into reports
+- real time module
 
 ## Installation
 
