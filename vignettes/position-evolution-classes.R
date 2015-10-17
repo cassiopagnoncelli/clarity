@@ -1,6 +1,6 @@
 library('kohonen')
-source('aux-funs.R', local=.GlobalEnv)
-source('symbols.R')
+source('include/helpers.R', local=.GlobalEnv)
+source('include/symbols.R')
 
 load_instruments('bisa3_sa', columns=1:6)
 colnames(P) <- c(colnames(P)[-6], 'p')
