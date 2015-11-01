@@ -90,6 +90,8 @@ library('ccgarch')
 library('fGarch')
 library('gogarch')
 
+library('vars')              # VAR, SVAR
+
 library('dse')               # Dynamic system estimation
 
 library('fUnitRoots')        # Unit roots time series testing methods
