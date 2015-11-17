@@ -86,9 +86,10 @@ library('ftsa')              # Simple ts tools
 library('fts')               # Interface to tslib (a time series lib in C++)
 
 library('rugarch')
-library('ccgarch')
+library('ccgarch')           # contains dynamic correlation model too
 library('fGarch')
 library('gogarch')
+library('rmgarch')           # contains dynamic correlation model, requires mpfr-devel
 
 library('vars')              # VAR, SVAR
 
