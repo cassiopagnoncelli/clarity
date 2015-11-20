@@ -1,5 +1,7 @@
 library('compiler')
-require('MASS')
+library('MASS')
+library('urca')
+library('TTR')
 
 # This algorithm solves  max |cor(xA'wA, xB'wB)|   s.t.  sum([wA | wB]) = 1.
 maxcor <- function(xA, xB, preserve.inputs=TRUE, separation=c(0.4, 0.4)) {
@@ -116,8 +118,6 @@ print.maxcor <- function(model) {
 }
 
 summary.maxcor <- function(model) {
-  library('urca')
-  
   xt <- cbind(model$xA, model$xB)
   
   #co.test <- ca.jo(xt, ecdet='const', type='trace', K=2, spec='transitory')
@@ -132,6 +132,9 @@ summary.maxcor <- function(model) {
 example.maxcor <- function() {
   source('include/clarity.R', local=.GlobalEnv)
   #load_instruments(list_instruments())
+  
+  # optional smoothing
+  P <- apply(P, 2, function(x) { EMA(x, 8) })[-(1:8),]
   
   A.cols <- sample(1:ncol(P), 8, F)
   B.cols <- setdiff(1:ncol(P), A.cols)
