@@ -25,7 +25,7 @@ maxcor <- function(xA, xB, preserve.inputs=TRUE, separation=c(0.4, 0.4)) {
     wB <- w[(ncol(xA)+1):(ncol(xA)+ncol(xB))]
     train_error <- 1 - cor(xA[training,] %*% wA, xB[training,] %*% wB)^2
     valid_error <- 1 - cor(xA[validation,] %*% wA, xB[validation,] %*% wB)^2
-    sqrt(train_error^2 + valid_error^2)
+    sqrt(abs(train_error) + valid_error^2)   # choose carefully this train+validation error funct.
     train_error
   })
   
@@ -131,10 +131,12 @@ summary.maxcor <- function(model) {
 
 example.maxcor <- function() {
   source('include/clarity.R', local=.GlobalEnv)
-  #load_instruments(list_instruments())
+  
+  if (!exists("P")) load_instruments(list_instruments())
   
   # optional smoothing
-  P <- apply(P, 2, function(x) { EMA(x, 8) })[-(1:8),]
+  period <- 5
+  P <- apply(P, 2, function(x) { EMA(x, period) })[-(1:period),]
   
   A.cols <- sample(1:ncol(P), 8, F)
   B.cols <- setdiff(1:ncol(P), A.cols)
