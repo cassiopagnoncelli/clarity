@@ -40,6 +40,7 @@ endEA <- function() {}
 # - positions_history
 #
 tickEA <- function() {
+  # EAs of this fashion should be as profitable as scalpers.
   if (nrow(open_positions) > 0) {
     if (pos_manage_long() > 0)
       closePosition(1)
