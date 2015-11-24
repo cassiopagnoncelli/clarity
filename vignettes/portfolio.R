@@ -1,8 +1,11 @@
-# Global minimum variance portfolio
+#
+# Global minimum variance portfolio.
+#
+source('include/clarity.R', local=.GlobalEnv)
 
 # Instruments and returns.
-s <- loadSymbols(c('gerdau', 'marcopolo', 'plascar', 'porto_seguro', 'renner', 'weg', 'petrobras'))
-r <- returnize(s)
+load_instruments(list_instruments()[3:10])
+r <- returnize(P)
 m <- apply(r, 2, mean)
 
 # Global minimum and efficient portfolios.
