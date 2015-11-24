@@ -1,4 +1,7 @@
+source('include/clarity.R', local=.GlobalEnv)
 require('MASS')
+
+load_instruments(list_instruments()[1], 'p')
 
 AICc <- function(fit) {
   ll <- as.numeric(logLik(fit))
