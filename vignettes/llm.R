@@ -129,7 +129,7 @@ summary.llm <- function(fit, show.coefficients=FALSE) {
   }
   
   cat(paste('Formula:\n'))
-  print.formula(fit$formula)
+  print(fit$formula)
   cat('\n')
   
   cat(paste('Model order: ', fit$order, '      ', sep=''))
@@ -151,10 +151,12 @@ predict.llm <- function(fit, newdata) {
 }
 
 example.llm <- function() {
-  v <- loadSymbols(c('cyrela', 'gafisa', 'pdg', 'rossi', 'tecnisa', 'brookfield'))
-  #ret <- diff(log(v))[-1,]
+  source('include/clarity.R', local=.GlobalEnv)
+  load_instruments(c('gfsa3_sa', 'pdgr3_sa', 'mrve3_sa'), 'v')
   
-  fit <- llm(cyrela ~ gafisa + pdg + rossi + tecnisa + brookfield, v, 8, 0.2)
+  ret <- data.frame(returnize(v)[-1,])
+  
+  fit <- llm(GFSA3.SA.Adjusted ~ PDGR3.SA.Adjusted + MRVE3.SA.Adjusted, ret, 8, 0.2)
   plot(fit)
   summary(fit)
 }
