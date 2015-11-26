@@ -99,6 +99,7 @@ Parameter optimisation can be performed using genetic algorithms, simulated anne
 - plot entry & exit points for every trade
 - stacked balance + floating to equity curve into reports
 - real time module
+- load\_instruments should create two vars: a xts/zoo lowercase p and its matrix uppercase P equivalente
 
 ## Installation
 
