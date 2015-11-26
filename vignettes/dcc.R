@@ -2,7 +2,11 @@ source('include/clarity.R', local=.GlobalEnv)
 library('ccgarch')
 library('rmgarch')
 
-load_instruments(c('lame4_sa', 'rent3_sa'), 'y')
+load_instruments(c('gfsa3_sa', 'rent3_sa'), 'y')
+
+# cross-correlation plot
+r <- as.ts(returnize(y))[-1,]
+ccf(r[,1], r[,2], main='Cross correlation between instruments')
 
 # ccgarch
 f1 = garchFit(~ garch(1,1), data=y[,1],include.mean=FALSE)
