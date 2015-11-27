@@ -32,6 +32,7 @@ initializeBackend <- function(settings) {
   assign('positions_returns', NA, envir=.GlobalEnv)
   assign('holding_time', NA, envir=.GlobalEnv)
   assign('all_series', NULL, envir=.GlobalEnv)
+  assign('allSeries', NULL, envir=.GlobalEnv)
   
   # Journaling.
   assign('journaling', settings$journaling, envir=.GlobalEnv)

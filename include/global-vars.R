@@ -26,6 +26,7 @@ eval({
   default_instrument_id <- NULL
   
   all_series <- NULL
+  allSeries <- NULL
   open <- NULL
   high <- NULL
   low <- NULL

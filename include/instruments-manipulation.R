@@ -8,6 +8,7 @@ addInstrument <- function(name, series_id = 1, set_default = TRUE) {
     envir=.GlobalEnv)
   
   assign('all_series',cbind(all_series, get(name)[,series_id]), envir=.GlobalEnv)
+  assign('allSeries', matrix(all_series), envir=.GlobalEnv)
   
   if (set_default) {
     #if (set_ohlc) {
@@ -39,9 +40,9 @@ instrumentSeries <- cmpfun(function(instrument_id='default', full_series=F) {
                             instrument_id)
   
   if (full_series)
-    as.double(all_series[, instruments[instrument_id, 'series_id']])
+    allSeries[, instruments[instrument_id, 'series_id']]
   else
-    as.double(all_series[epoch, instruments[instrument_id, 'series_id']])
+    allSeries[epoch, instruments[instrument_id, 'series_id']]
 })
 
 ask <- function(instrument_id='default') {
