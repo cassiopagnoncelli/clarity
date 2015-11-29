@@ -180,6 +180,7 @@ library('e1071')             # SVM
 library('rpart')             # D-tree and random forest
 library('randomForest')
 library('Cubist')            # Quinlan's C5.0 and Cubist
+library('C50')
 library('frbs')              # Fuzzy rule-based systems
 library('quantregForest')    # Quantile regression forest
 library('gbm')               # Gradient boosted trees
