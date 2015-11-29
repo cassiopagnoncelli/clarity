@@ -140,6 +140,7 @@ library('latentnet')         # Latent position and cluster models for networks
 library('lme4')              # Linear Mixed-Effects Models
 library('nlme')              # Nonlinear Mixed-Effects Models
 library('rebmix')            # Bayesian Finite Mixture Models
+library('mda')
 
 library('TraMineR')          # Sequence analysis
 
