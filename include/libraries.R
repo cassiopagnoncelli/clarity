@@ -162,6 +162,8 @@ library('mgcv')              # Mixed GAM computation, smoothness estimation
 
 library('kknn')
 
+library('klaR')              # NaiveBayes
+
 library('nnet')
 library('neuralnet')
 library('RSNNS')
