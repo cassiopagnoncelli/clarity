@@ -177,6 +177,7 @@ library('som')               # poor SOM
 library('cluster')
 library('wskm')              # Weighted K-means
 library('mclust')
+library('fpc')
 
 library('e1071')             # SVM
 
