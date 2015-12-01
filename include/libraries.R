@@ -145,8 +145,10 @@ library('mda')
 library('TraMineR')          # Sequence analysis
 
 # Machine learning and dynamic models.
-library('h2o')
 library('caret')             # General machine learning tools and models
+library('DAAG')              # Cross validation functions
+
+library('h2o')               # Deep learning and other algorithms
 
 library('forecast')
 
@@ -178,6 +180,7 @@ library('cluster')
 library('wskm')              # Weighted K-means
 library('mclust')
 library('fpc')
+library('dbscan')
 
 library('e1071')             # SVM
 
