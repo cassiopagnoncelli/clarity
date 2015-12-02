@@ -4,7 +4,7 @@ library('urca')
 library('TTR')
 
 # This algorithm solves  max |cor(xA'wA, xB'wB)|   s.t.  sum([wA | wB]) = 1.
-maxcor <- function(xA, xB, preserve.inputs=TRUE, separation=c(0.4, 0.4)) {
+maxcor <- function(xA, xB, preserve.inputs=TRUE, separation=c(0.3, 0.3)) {
   if (nrow(xA) != nrow(xB)) {
     cat("xA and xB differ in row numbers.")
     return(FALSE)
