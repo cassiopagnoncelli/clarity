@@ -40,7 +40,7 @@ lines(mas, col='blue', lwd=3)
 abline(v=entries)
 
 # Generate Y (dependent variable), we want to predict based on position evolution's linear slope.
-l <- 20
+l <- 25
 erange <- matrix(unlist(lapply(entries, function(begin) { begin:(begin+l-1) })), ncol=l, byrow=T)
 
 post_open <- apply(erange, 2, function(row) { p[row] })
@@ -49,6 +49,7 @@ x <- cbind(rep(1, l), 1:l)
 lsq <- ginv(x %*% t(x)) %*% x
 coeff <- post_open %*% lsq
 slope <- coeff[,2]
+slope[length(slope)] <- 0
 
 truehist(slope)
 
