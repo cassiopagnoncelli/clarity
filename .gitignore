@@ -18,3 +18,4 @@ tmp/*
 vignettes/experiments/show.pdf
 vignettes/experiments/show.html
 include/reporting/strategy-report.html
+examples/expert-simulation.html
