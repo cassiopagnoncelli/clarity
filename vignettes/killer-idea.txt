@@ -1,0 +1,1 @@
+Use Google Trends on Stocks to get stock activity outside trading data.
