@@ -55,6 +55,6 @@ tickEA <- function() {
   list(
     deposit = 10000,
     journaling = TRUE,
-    plot_event_profiler = FALSE
+    plot_event_profiler = TRUE
   )
 ))

@@ -18,10 +18,11 @@ then
 fi
 
 # R packages download.
-for i in $(grep -R "library(" include/* | grep -v "libraries.R" | cut -d":" -f 2 | cut -d "'" -f 2)
+pkglist=$(grep "library(" include/libraries.R | grep -v "libraries.R" | cut -d":" -f 2 | cut -d "'" -f 2)
+for i in $pkglist
 do
   echo $i
-  R -q --vanilla <<EOF
+  sudo R -q --vanilla <<EOF
 install.packages("$i")
 EOF
 done

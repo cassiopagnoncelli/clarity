@@ -1,3 +1,6 @@
+# Environment.
+library('dotenv')
+
 # Database.
 library('DBI')               # Interface to a number of databases
 library('RPostgreSQL')       # Postgres interface via psqlODBC libiodbc-devel iodbc
@@ -215,3 +218,4 @@ library('locfit')            # Local regression, likelihood and density estimati
 library('nlme')              # Linear and nonlinear mixed effects models
 
 library('sapa')              # Spectral anaylsis for physical applications
+
