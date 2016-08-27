@@ -1,1 +1,3 @@
 Use Google Trends on Stocks to get stock activity outside trading data.
+Use Alexa Rank to get an idea of a country's GDP activity.
+
