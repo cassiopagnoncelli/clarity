@@ -79,28 +79,6 @@ Alike _MetaTrader_, the well known tool for retail traders, __Clarity__ bundles 
 
 Parameter optimisation can be performed using genetic algorithms, simulated annealing, and a few others depending on parameters restrictions.
 
-#### To do list
-
-- Short selling.
-- Limit orders.
-- Two way queue system: FIFO system, OCO orders
-- Stop loss / take profit.
-- Transaction costs, commission and spread.
-- Slippage simulation according to volatility.
-- Order book simulation (FIFO and the other one).
-- Append position's return in open\_positions
-- Add kelly criteria in reporting result for multi-asset
-- Portfolio report
-- Amend FRED meta info: http://stackoverflow.com/questions/24985267/quantmod-fred-metadata-in-r
-- load\_instruments' trim function
-- start+end dates into indicators table
-- R mirror at setup
-- migrate graphics to ggplot2
-- plot entry & exit points for every trade
-- stacked balance + floating to equity curve into reports
-- real time module
-- load\_instruments should create two vars: a xts/zoo lowercase p and its matrix uppercase P equivalente
-
 ## Installation
 
 Run
