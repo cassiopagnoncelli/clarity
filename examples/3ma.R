@@ -1,5 +1,5 @@
 source('include/clarity.R', local=.GlobalEnv)
-source('add-ons.R', local=.GlobalEnv)
+source('include/add-ons.R', local=.GlobalEnv)
 library('TTR')
 library('dlm')
 

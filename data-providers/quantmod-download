@@ -26,6 +26,8 @@ pg_con <- dbConnect(pg_driver, dbname='clarity')
 
 dbRemoveTable(pg_con, clarity_key)
 
+options("getSymbols.yahoo.warning"=FALSE)
+
 dbWriteTable(pg_con, clarity_key, as.data.frame(
   get(getSymbols(ticker, from=as.Date('1970-01-01'), env=.GlobalEnv))))
 
