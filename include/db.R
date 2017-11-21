@@ -1,41 +1,42 @@
 library('DBI')
-library('RPostgreSQL')  # Dependencies: # zypper install psqlODBC libiodbc-devel iodbc
+library('RPostgreSQL')
 
 pg_driver <- dbDriver('PostgreSQL')
-#dbUnloadDriver(pg_driver)
 
-disconnect <- function() { lapply(dbListConnections(PostgreSQL()), dbDisconnect) }
+disconnect <- function() 
+  lapply(dbListConnections(PostgreSQL()), dbDisconnect)
+
 disconnect()
 
-table_exists <- function(db, tbl_name) {
+table_exists <- function(tbl_name, db='clarity') {
   pg_con <- dbConnect(pg_driver, dbname=db)
   result = dbExistsTable(pg_con, tbl_name)
   dbDisconnect(pg_con)
   return(result)
 }
 
-table_remove <- function(db, tbl_name) {
+table_remove <- function(tbl_name, db='clarity') {
   pg_con <- dbConnect(pg_driver, dbname=db)
   result = dbRemoveTable(pg_con, tbl_name)
   dbDisconnect(pg_con)
   return(result)
 }
 
-table_read <- function(db, tbl_name) {
+table_read <- function(tbl_name, db='clarity') {
   pg_con <- dbConnect(pg_driver, dbname=db)
   result = dbReadTable(pg_con, tbl_name)
   dbDisconnect(pg_con)
   return(result)
 }
 
-table_write <- function(db, tbl_name, df, append=FALSE) {
+table_write <- function(tbl_name, df, append=FALSE, db='clarity') {
   pg_con <- dbConnect(pg_driver, dbname=db)
-  result = dbWriteTable(pg_con, instrument_name, as.data.frame(df), append=append)
+  result = dbWriteTable(pg_con, tbl_name, as.data.frame(df), append=append)
   dbDisconnect(pg_con)
   return(result)
 }
 
-table_query <- function(db, query) {
+table_query <- function(query, db='clarity') {
   pg_con <- dbConnect(pg_driver, dbname=db)
   result = dbGetQuery(pg_con, query)
   dbDisconnect(pg_con)

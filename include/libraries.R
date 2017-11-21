@@ -1,6 +1,9 @@
 # Environment.
 library('dotenv')
 
+# Pipe operator.
+library("tidyverse")         # magrittr
+
 # Database.
 library('DBI')               # Interface to a number of databases
 library('RPostgreSQL')       # Postgres interface via psqlODBC libiodbc-devel iodbc

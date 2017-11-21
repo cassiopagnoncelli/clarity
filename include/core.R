@@ -1,8 +1,10 @@
 source('include/global-vars.R', local=.GlobalEnv) # No dependencies
 source('include/helpers.R', local=.GlobalEnv)     # No dependencies
+source('include/account.R', local=.GlobalEnv)     # No dependencies
 source('include/journal.R', local=.GlobalEnv)     # Depends global-vars
 source('include/instruments-manipulation.R', local=.GlobalEnv)
-source('include/orders-positions.R', local=.GlobalEnv)
+source('include/orders.R', local=.GlobalEnv)
+source('include/positions.R', local=.GlobalEnv)
 source('include/event-profiler.R', local=.GlobalEnv)
 source('include/reporting.R', local=.GlobalEnv)
 
@@ -10,91 +12,83 @@ library('compiler')
 
 # Tick loop.
 initializeBackend <- function(settings) {
-  assign('stopped', FALSE, envir=.GlobalEnv)
+  # Whether the program is running.
+  stopped <<- FALSE
   
-  # Account meta information.
-  assign('unit', 'BRL', envir=.GlobalEnv)
-  
-  # Broker.
-  assign('commission', 0.005, envir=.GlobalEnv)
-  assign('bid_spread', 0.0005, envir=.GlobalEnv)
-  
-  # Account money.
-  assign('balance', settings$deposit, envir=.GlobalEnv)
-  assign('floating', 0, envir=.GlobalEnv)
-  assign('equity', settings$deposit, envir=.GlobalEnv)
-  
-  assign('balance_now', settings$deposit, envir=.GlobalEnv)
-  assign('floating_now', 0, envir=.GlobalEnv)
-  assign('equity_now', settings$deposit, envir=.GlobalEnv)
+  # Account meta.
+  unit <<- 'USD'
   
   # Positions and orders.
-  assign('positions_returns', NA, envir=.GlobalEnv)
-  assign('holding_time', NA, envir=.GlobalEnv)
-  assign('all_series', NULL, envir=.GlobalEnv)
-  assign('allSeries', NULL, envir=.GlobalEnv)
+  orders <<- data.frame()
+  positions <<- data.frame()
+  positions_history <<- data.frame()
   
-  # Journaling.
-  assign('journaling', settings$journaling, envir=.GlobalEnv)
+  # Journaling
+  journaling <<- settings$journaling
   
   # Plots.
-  assign('plot_event_profiler', settings$plot_event_profiler, envir=.GlobalEnv)
-  assign('plot_report', settings$plot_report, envir=.GlobalEnv)
+  plot_event_profiler <<- settings$plot_event_profiler
+  plot_report <<- settings$plot_report
 }
 
-accountTickUpdate <- cmpfun(function(update.returns = FALSE) {
-  if (update.returns) {
-    if (nrow(open_positions) > 0) {
-      assign('positions_returns',
-             instrumentSeries(open_positions$instrument_id) / 
-               all_series[open_positions$epoch, open_positions$instrument_id]-1,
-             envir=.GlobalEnv)
-      assign('holding_time', epoch - open_positions$epoch, envir=.GlobalEnv)
-    } else {
-      assign('positions_returns', NA, envir=.GlobalEnv)
-      assign('holding_time', NA, envir=.GlobalEnv)
-    }
+initializeÇ <- function(etl, initial_balance) {
+  etl()
+  
+  new_columns <<- matrix(NA, ncol=3, nrow=nrow(ç))
+  colnames(new_columns) <<- c('balance', 'margin', 'floating')
+  
+  new_columns[1, 'balance'] <<- initial_balance
+  new_columns[1, 'margin'] <<- 0
+  new_columns[1, 'floating'] <<- 0
+  
+  ç <<- merge(ç, new_columns)
+}
+
+executeOrders <- cmpfun(function() {
+  if (nrow(orders) > 0)
+    openPositions()
+})
+
+accountUpdate <- cmpfun(function() {
+  # equity = balance + floating.
+  # free margin = equity - margin.
+  
+  ç$balance[z] <<- ç$balance[z - 1]
+  ç$margin[z] <<- ç$margin[z - 1]
+  
+  if (nrow(positions) == 0) {
+    ç$floating[z] <<- 0
+  } else {
+    updatePositions()
+    ç$floating[z] <<- sum(positions$profit_loss)
   }
-  
-  assign('balance', c(balance, balance_now), envir=.GlobalEnv)
-  
-  assign('floating_now', 
-    ifelse(nrow(open_positions) > 0,
-      (-1)^as.vector(open_positions$type == 'S') *
-      sum(instrumentSeries(open_positions$instrument_id) * 
-      open_positions$amount), 0),
-    envir=.GlobalEnv)
-  assign('floating', c(floating, floating_now), envir=.GlobalEnv)
-  
-  assign('equity_now', balance_now + floating_now, envir=.GlobalEnv)
-  assign('equity', c(equity, equity_now), envir=.GlobalEnv)
-  
-  if (had_deal)
-    assign('had_deal', FALSE, envir=.GlobalEnv)
 })
 
 loopEA <- function(vectorized, beginEA, tickEA, endEA) {
   tickEAcompiled <- cmpfun(tickEA)
   
-  starting_time <- vectorized()
-  assign('starting_epoch', starting_time, envir=.GlobalEnv)
-  assign('epoch', starting_time, envir=.GlobalEnv)
+  # Vectorized.
+  vectorized()
+  z <<- 2
   
   if (journaling)
-    journalWrite(paste('Starting simulation in epoch', epoch), level='info')
+    journalWrite('Starting simulation', level='info')
   
   beginEA()
   
-  n <- nrow(all_series)
-  while (epoch < n & !stopped) {
+  n <- nrow(ç)
+  
+  while (z < n & !stopped) {
+    accountUpdate()
     tickEAcompiled()
-    accountTickUpdate()
-    assign('epoch', epoch + 1, envir=.GlobalEnv)
+    executeOrders()
+    z <<- z + 1
   }
   
+  # Review.
   if (!stopped) {
     closeAllPositions()
-    accountTickUpdate()
+    accountUpdate()
   }
   
   endEA()
@@ -106,18 +100,19 @@ stopEA <- function() {
 }
 
 # Expert advisor.
-runExpertAdvisor <- function(etl, vectorized, beginEA, tickEA, endEA, settings){
+runExpertAdvisor <- function(etl, vectorized, beginEA, tickEA, endEA, settings) {
   initializeBackend(settings)
-  etl()
+  initializeÇ(etl, settings$deposit)
   
   end_message <- loopEA(vectorized, beginEA, tickEA, endEA)
   
   if (plot_event_profiler)
     runEventProfiler()
   
-  ea_return <- append(list(journal=journal, end=end_message), generateReport())
+  # ea_return <- append(list(journal=journal, end=end_message), generateReport())
+  # ea_return <- append(list(journal=journal, end=end_message))
   
-  saveVariables(ea_return)
+  # saveVariables(ea_return)
   
-  ea_return
+  # ea_return
 }
