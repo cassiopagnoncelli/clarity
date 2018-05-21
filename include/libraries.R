@@ -156,6 +156,9 @@ library('outliers')          # Remove outliers
 
 # library('h2o')               # Deep learning and other algorithms
 
+# library('xgboost')           # XGBoost.
+# library('mxnet')             # Project above for deep neural network.
+
 library('forecast')
 
 # library('arules')
