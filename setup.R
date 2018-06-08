@@ -1,3 +1,7 @@
+# Fix timezone.
+# Sys.setenv(TZ='America/Sao_Paulo')
+Sys.setenv(TZ='GMT')
+
 # Install missing libs.
 contents <- readLines('include/libraries.R')
 clarity_libs <- unlist(lapply(
@@ -9,9 +13,6 @@ mark_for_installation
 
 for (p in mark_for_installation)
   install.packages(p)
-
-# Set timezone.
-Sys.setenv(TZ='GMT')
 
 # Create database.
 library('RPostgreSQL')

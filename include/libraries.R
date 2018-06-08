@@ -31,7 +31,7 @@ library('xts')               # Extensible time series
 # library('parallel')          # Parallel computation
 
 # Code utilities.
-library('assertthat')        # Assertion
+# library('assertthat')        # Assertion
 library('stringr')           # String misc functions
 # library('RUnit')             # Unit testing
 # library('SOAR')              # Memory management
@@ -50,8 +50,8 @@ library('formula.tools')
 # Plot.
 library('ggplot2')
 library('ggvis')
-library('corrgram')
-library('psych')             # Spider chart
+# library('corrgram')
+# library('psych')             # Spider chart
 
 #
 # Finance and Modeling.
@@ -82,7 +82,7 @@ library('quantmod')
 
 # Time series modeling.
 library('TSA')
-# library('tseries')
+library('tseries')
 # library('timeSeries')
 
 # library('fracdiff')          # ARFIMA
@@ -121,8 +121,8 @@ library('TSA')
 # Statistical methods.
 library('MASS')
 
-library('kernlab')
-library('KernSmooth')
+# library('kernlab')
+# library('KernSmooth')
 
 # library('copula')
 # library('fCopulae')
@@ -131,7 +131,7 @@ library('KernSmooth')
 
 # library('boot')              # Bootstrap
 
-library('outliers')          # Remove outliers
+# library('outliers')          # Remove outliers
 
 # library('longitudinal')      # Dynamic correlation
 
@@ -156,7 +156,7 @@ library('outliers')          # Remove outliers
 
 # library('h2o')               # Deep learning and other algorithms
 
-# library('xgboost')           # XGBoost.
+library('xgboost')           # XGBoost.
 # library('mxnet')             # Project above for deep neural network.
 
 library('forecast')
@@ -176,8 +176,8 @@ library('forecast')
 
 # library('klaR')              # NaiveBayes
 
-library('nnet')
-library('neuralnet')
+# library('nnet')
+# library('neuralnet')
 # library('RSNNS')
 # library('darch')             # Deep learning (poor)
 # library('deepnet')           # Deep learning (poor)
@@ -193,8 +193,8 @@ library('neuralnet')
 
 library('e1071')             # SVM
 
-library('rpart')             # D-tree and random forest
-library('randomForest')
+# library('rpart')             # D-tree and random forest
+# library('randomForest')
 # library('Cubist')            # Quinlan's C5.0 and Cubist
 # library('C50')
 # library('frbs')              # Fuzzy rule-based systems
@@ -212,7 +212,7 @@ library('randomForest')
 # library('KFAS')             # fast Kalman filter
 # library('FKF')               # Kalman filter
 # library('dse')               # Kalman
-library('dlm')               # Dynamic linear models
+# library('dlm')               # Dynamic linear models
 # library('dynlm')             # Dynamic linear models
 # library('mFilter')           # Several filters
 
