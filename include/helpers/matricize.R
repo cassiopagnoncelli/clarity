@@ -1,3 +1,5 @@
+library('quantmod')
+
 matricize <- function(x, lag=12) {
   n <- length(x)
   

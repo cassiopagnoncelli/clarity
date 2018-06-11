@@ -5,8 +5,6 @@ library('dlm')
 
 # Extract-Transform-Load.
 etl <- function() {
-  Sys.setenv(TZ='GMT')
-  
   load_instrument('eurusd')
 }
 
