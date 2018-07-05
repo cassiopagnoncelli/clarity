@@ -14,7 +14,7 @@ vignettes/*.pdf
 .Rproj.user
 
 # Clarity tmp
-tmp/*
+# tmp/*
 vignettes/experiments/show.pdf
 vignettes/experiments/show.html
 include/reporting/strategy-report.html
